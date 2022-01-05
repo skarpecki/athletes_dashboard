@@ -1,0 +1,15 @@
+POST http://127.0.0.1:5000//exercises HTTP/1.1
+content-type: application/json
+
+{
+    "name": "Squats",
+    "type": "STRENGTH",
+    "description": "description",
+    "video_url": "https://www.youtube.com/watch?v=0q1N-Blo-18",
+    "athletes_descriptions": {
+        "john doe": "stand up fast",
+        "jan kowalski": "focus on elbow extension"
+    }
+}
+
+

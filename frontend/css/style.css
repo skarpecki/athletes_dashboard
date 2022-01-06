@@ -1,16 +1,28 @@
 
-html, body {
+html {
     margin: 0;
     padding: 0;
+    height: 100%;
   }
   
 html {
     font-size: 10px;
     background-color: #E8E8E8;
+    -webkit-text-size-adjust: auto;
+}
+
+header {
+  width: 100vw;
+  position: relative;
+  left: calc(-50vw + 50%);
+  padding-top: 1px;
+  margin-top: 20px;
+  background-color: darkgrey;
 }
 
 body {
     width: 70%;
+    padding: 0;
     margin: 0 auto;
 }
 
@@ -79,15 +91,18 @@ p, input, li {
 
   main {
     display: flex;
+    min-height: 700px;
   }
 
   article {
-    flex: 5;
+    flex: 7;
   }
 
   aside {
-    flex: 1;
+    flex: 2;
     margin-right: 10px;
+    display: flex;
+    flex-direction: column;
   }
 
   aside li {
@@ -98,3 +113,84 @@ p, input, li {
   footer {
     margin-top: 10px;
   }
+
+  .exercise-about {
+    width: 50%;
+    margin-left: auto;
+    margin-right: auto;
+    border-width: 20px;
+    }
+    
+    
+
+  .dropdown .dropbtn {
+    height: 50%;
+    border: none;
+    outline: none;
+    background-color: inherit;
+    font-family: inherit;
+    margin: auto;
+    padding: 0;
+  }
+
+  .dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: white;
+  min-width: 150px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+}
+
+.dropdown-content a {
+  float: none;
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+  text-align: left;
+}
+
+.dropdown-content a:hover {
+  background-color: #ddd;
+}
+
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+
+.exercise-type-selector h2 {
+  font-size: 2.5rem;
+}
+
+
+.exercise-type-options div {
+  font-family:  Arial, Helvetica, sans-serif;
+  padding: 3px;
+  font-size: 1.8rem;
+}
+
+#exercise-name-selector {
+  width: 90%;
+  height: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 30px;
+  margin-bottom: 30px;
+  font-size: 1.3rem;
+  border-width: 1px;
+  border-color: grey;
+  border-style: solid;
+  overflow-x: scroll;
+}
+
+
+.exercise-name-search {
+  height: 10%;
+  width: 90%;
+  margin: auto;
+  border-width: 1px;
+  border-color: grey;
+  border-style: solid;
+  font-size: 1.8rem;
+}

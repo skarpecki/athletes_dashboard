@@ -3,21 +3,31 @@
     <head>
         <meta charset="utf-8">
         <title>Athletes dashboard</title>
-        <link href="https://fonts.googleapis.com/css?family=Open+Sans+Condensed:300|Sonsie+One" rel="stylesheet" type="text/css">
-        <link rel="stylesheet" href="../css/style.css">
+        <link rel="stylesheet" href="css/style.css">
     </head>
 
     <body>
         <header>
-            <h1>Main page</h1>
+            <h1>Athletes dashboard</h1>
         </header>
 
         <nav>
             <ul>
                 <li><a href="#">Home</a></li>
+                <li><a href="#">Converter</a></li>
                 <li><a href="#">Schedule</a></li>
                 <li><a href="#">Athletes</a></li>
-                <li><a href="#">Exercises</a></li>
+                <li>
+                    <div class="dropdown">
+                        <button class="dropbtn"><a href="html/exercises/exercises.html">Exercises</a>
+                            <i class="fa fa-caret-down"></i>
+                        </button>
+                        <div class="dropdown-content">
+                            <a href="html/exercises/exercises.html">Browse</a>
+                            <a href="#">Add</a>
+                        </div>
+                    </div>
+                </li>
             </ul>
         </nav>
 

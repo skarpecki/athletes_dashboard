@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Athletes dashboard</title>
+        <link rel="stylesheet" href="../../css/style.css">
+        <script src="script.js"></script>
+    </head>
+
+    <body>
+        <header>
+            <h1>Athletes dashboard</h1>
+        </header>
+
+        <nav>
+            <ul>
+                <li><a href="../../index.html">Home</a></li>
+                <li><a href="#">Converter</a></li>
+                <li><a href="#">Schedule</a></li>
+                <li><a href="#">Athletes</a></li>
+                <li>
+                    <div class="dropdown">
+                        <button class="dropbtn"><a href="#">Exercises</a>
+                            <i class="fa fa-caret-down"></i>
+                        </button>
+                        <div class="dropdown-content">
+                            <a href="#">Browse</a>
+                            <a href="#">Add</a>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </nav>
+
+        <main>
+            <aside>
+                <div class="exercise-type-selector">
+                    <h2>Select exercise</h2>
+                    <div class="exercise-type-options">
+                        <div>
+                            <input type="radio" id="exercise-type1"
+                            name="exercise-type" value="all" checked="checked">
+                           <label for="exercise-type1">All</label>
+                        </div>
+                   
+                        <div>
+                            <input type="radio" id="exercise-type2"
+                             name="exercise-type" value="strength">
+                            <label for="exercise-type2">Strength</label>
+                        </div>
+                   
+                        <div>
+                            <input type="radio" id="exercise-type3"
+                             name="exercise-type" value="cardio">
+                            <label for="exercise-type3">Cardio</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <select name="exercises" size=2 id="exercise-name-selector">
+
+                    
+                </select>
+                <div class="exercise-name-search">
+                    <p>search bar - todo</p>
+                </div>
+
+              </aside>
+              <article>
+
+              </article>
+        </main>
+
+        <footer>
+            <p>©Copyright 2021 by skarpecki. All rights reversed.</p>
+        </footer>
+
+    </body>
+</html>

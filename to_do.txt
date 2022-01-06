@@ -1,0 +1,1 @@
+Check how to avoid CORS error when redirect in action (e.g. request to http://127.0.0.1:5000/exercises)

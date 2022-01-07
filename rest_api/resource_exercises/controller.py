@@ -8,7 +8,7 @@ exercises_bp = Blueprint('exercises', __name__)
 @exercises_bp.route("/", methods=['GET', 'POST'])
 def exercises():
     if request.method == 'GET':
-        filter={}
+        filter = request.args
         result = ExerciseService(r"mongodb://localhost:27017",
                                 "dashboard",
                                 "exercises").get_exercises(filter)

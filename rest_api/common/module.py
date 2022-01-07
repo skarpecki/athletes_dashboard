@@ -14,3 +14,11 @@ class JSONEncoder(json.JSONEncoder):
             if isinstance(o, ObjectId):
                 return str(o)
             return json.JSONEncoder.default(self, o)
+
+def validateMongoFilter(filter: dict):
+    for key, value in filter.items():
+        if("$" in key or "$" in value):
+            return False
+        if("==" in key or "==" in value):
+            return False
+    return True

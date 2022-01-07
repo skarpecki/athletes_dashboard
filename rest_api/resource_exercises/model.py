@@ -1,14 +1,11 @@
-import json
-import re
 from typing import Collection
 from typing_extensions import Required
 from bson.objectid import ObjectId
 from marshmallow import Schema, fields, validate
 from enum import Enum
-import uuid
 from marshmallow.exceptions import ValidationError
 from pymongo import MongoClient, collection
-from common.module import Result, JSONEncoder
+from common.module import Result, JSONEncoder, validateMongoFilter
 
 
 class ExerciseType(Enum):
@@ -75,7 +72,10 @@ class ExerciseService:
     def get_exercises(self, filter={}):
         db = self.client[self.db_name]
         collection = db[self.collection_name]
-        document = list(collection.find(filter))
+        if(not validateMongoFilter(filter)):
+            return Result({"message": "not allowed sign found in query parameters"}, 400)
+        # setting collation to strenght 2 in order to make case insensitive comparison
+        document = list(collection.find(filter).collation( {"locale": "en", "strength": 2}))
         return Result(JSONEncoder().encode({"exercises": document}), 200)
 
     def get_exercise(self, _id):
@@ -83,3 +83,4 @@ class ExerciseService:
         collection = db[self.collection_name]
         document = collection.find_one(ObjectId(_id))
         return Result(JSONEncoder().encode(document), 200)
+

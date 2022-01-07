@@ -17,12 +17,10 @@ window.onload = function() {
         // getExerciseJSON(this.value).then(function(json){
         //     exerciseArticle.innerHTML = getExerciseArticleHTML(json);
         // }); 
-        
+        console.log(this);
         getExerciseJSON(this.value).then(json => 
             exerciseArticle.innerHTML = getExerciseArticleHTML(json));
-    }
-    
-    
+    }   
 }
 
 function getExerciseArticleHTML(json) {
@@ -66,9 +64,33 @@ function getExerciseJSON(exerciseID) {
 
 var fillExerciseSelector = jsonArray => {
     const select = document.querySelector("select")
+    claerSelectElements(select);
     jsonArray["exercises"].forEach(element => {
         let opt = document.createElement("option");
         opt.value=element._id;
         opt.text=element.name;
         select.appendChild(opt);
 })};
+
+
+var handleExerciseTypeClick = (btn) => {
+    let url = `http://127.0.0.1:5000/exercises/?type=${btn.value}`;
+    if(btn.value == "all")
+    {
+        url = `http://127.0.0.1:5000/exercises/`;
+    }
+    fetch(url).then(function(response){
+        return response.json()
+    }).then(function(json) {
+        fillExerciseSelector(json);
+    }).catch(function(err){
+        console.log(err.message);
+    });
+}
+
+var claerSelectElements = selectElement => {
+    for(var i = selectElement.options.length - 1; i >= 0; i--)
+    {
+        selectElement.remove(i);
+    }
+};

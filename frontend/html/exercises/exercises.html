@@ -34,28 +34,26 @@
 
         <main>
             <aside>
-                <div class="exercise-type-selector">
+                <form class="exercise-type-selector">
                     <h2>Select exercise</h2>
-                    <div class="exercise-type-options">
-                        <div>
-                            <input type="radio" id="exercise-type1"
-                            name="exercise-type" value="all" checked="checked">
+                        <div class="exercise-type-options">
+                            <input type="radio" id="exercise-type1" 
+                            name="exerciseTypeRadio" value="all" checked="checked" onclick="handleExerciseTypeClick(this)">
                            <label for="exercise-type1">All</label>
                         </div>
-                   
-                        <div>
+
+                        <div class="exercise-type-options">
                             <input type="radio" id="exercise-type2"
-                             name="exercise-type" value="strength">
+                             name="exerciseTypeRadio" value="strength" onclick="handleExerciseTypeClick(this)">
                             <label for="exercise-type2">Strength</label>
                         </div>
-                   
-                        <div>
+
+                        <div class="exercise-type-options">
                             <input type="radio" id="exercise-type3"
-                             name="exercise-type" value="cardio">
+                             name="exerciseTypeRadio" value="cardio" onclick="handleExerciseTypeClick(this)">
                             <label for="exercise-type3">Cardio</label>
                         </div>
-                    </div>
-                </div>
+                </form>
                 
                 <select name="exercises" size=2 id="exercise-name-selector">
 

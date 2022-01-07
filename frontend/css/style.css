@@ -160,14 +160,13 @@ p, input, li {
 }
 
 .exercise-type-selector h2 {
-  font-size: 2.5rem;
+  font-size: 3.0rem;
 }
 
-
-.exercise-type-options div {
+.exercise-type-options  {
   font-family:  Arial, Helvetica, sans-serif;
   padding: 3px;
-  font-size: 1.8rem;
+  font-size: 2rem;
 }
 
 #exercise-name-selector {

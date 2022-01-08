@@ -1,4 +1,3 @@
-
 html {
     margin: 0;
     padding: 0;
@@ -7,6 +6,7 @@ html {
   
 html {
     font-size: 10px;
+    font-family:  Arial, Helvetica, sans-serif;
     background-color: #E8E8E8;
     -webkit-text-size-adjust: auto;
 }
@@ -113,16 +113,11 @@ p, input, li {
   footer {
     margin-top: 10px;
   }
-
-  .exercise-about {
-    width: 50%;
-    margin-left: auto;
-    margin-right: auto;
-    border-width: 20px;
-    }
-    
-    
-
+  .dropdown {
+    height: 100%;
+    margin: auto;
+    padding-top: 3px;
+  }
   .dropdown .dropbtn {
     height: 50%;
     border: none;
@@ -130,7 +125,7 @@ p, input, li {
     background-color: inherit;
     font-family: inherit;
     margin: auto;
-    padding: 0;
+    
   }
 
   .dropdown-content {
@@ -192,4 +187,39 @@ p, input, li {
   border-color: grey;
   border-style: solid;
   font-size: 1.8rem;
+}
+
+.add-exercise-form {
+  font-size: 2.0rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.add-exercise-form p {
+  font-size: 2.0rem;
+}
+
+.add-exercise-field {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 20px;
+  width: 60%;
+}
+
+.add-exercise-field p, .add-exercise-field label {
+  margin-top: 0;
+  margin-bottom: 1px;
+}
+
+#exercise-description {
+  height: 200px;
+}
+
+#add-exercise-types {
+  display: flex;
+  font-size: 1.7rem;
+}
+
+#add-exercise-types label{
+  margin-right: 20px;
 }

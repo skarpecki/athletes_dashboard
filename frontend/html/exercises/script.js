@@ -12,12 +12,11 @@ window.onload = function() {
     });
     
     document.getElementById("exercise-name-selector").ondblclick = function() {
-        const exerciseArticle = document.querySelector("article");
-        
+        const exerciseArticle = document.getElementsByName("exercise")[0];
+        console.log(exerciseArticle);
         // getExerciseJSON(this.value).then(function(json){
         //     exerciseArticle.innerHTML = getExerciseArticleHTML(json);
         // }); 
-        console.log(this);
         getExerciseJSON(this.value).then(json => 
             exerciseArticle.innerHTML = getExerciseArticleHTML(json));
     }   

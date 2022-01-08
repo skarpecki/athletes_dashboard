@@ -21,12 +21,12 @@
             <li><a href="#">Athletes</a></li>
             <li>
                 <div class="dropdown">
-                    <button class="dropbtn"><a href="#">Exercises</a>
+                    <button class="dropbtn"><a href="exercises.html">Exercises</a>
                         <i class="fa fa-caret-down"></i>
                     </button>
                     <div class="dropdown-content">
-                        <a href="#">Browse</a>
-                        <a href="add-exercise.html">Add</a>
+                        <a href="exercises.html">Browse</a>
+                        <a href="#">Add</a>
                     </div>
                 </div>
             </li>
@@ -36,7 +36,7 @@
     <main>
         <aside>
             <form class="exercise-type-selector">
-                <h2>Select exercise</h2>
+                <h2>Fill in sample exercise</h2>
                 <div class="exercise-type-options">
                     <input type="radio" id="exercise-type1" name="exerciseTypeRadio" value="all" checked="checked"
                         onclick="handleExerciseTypeClick(this)">
@@ -66,8 +66,30 @@
 
         </aside>
 
-        <article name="exercise">
+        <article>
+            <h1>Add new exercise</h1>
+            <form class="add-exercise-form">
+                <div class="add-exercise-field">
+                    <label for="exercise-name">Exercise name</label>
+                    <input type="text" id="exercise-name" name="exerciseName">
+                </div>
 
+                <div class="add-exercise-field">
+                    <p>Exercise type</p>
+                    <div id="add-exercise-types">
+                        <input type="radio" id="add-exercise-type1" name="addExerciseTypeRadio" value="strength">
+                        <label for="add-exercise-type1">Strength</label>
+
+                        <input type="radio" id="add-exercise-type2" name="addExerciseTypeRadio" value="cardio">
+                        <label for="add-exercise-type2">Cardio</label>
+                    </div>
+                </div>
+
+                <div class="add-exercise-field">
+                    <label for="exercise-description">Exercise description</label>
+                    <textarea id="exercise-description" name="exerciseDescription" maxlength="1000"></textarea>
+                </div>
+            </form>
         </article>
     </main>
 

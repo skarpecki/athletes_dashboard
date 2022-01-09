@@ -186,13 +186,20 @@ function insertExercise() {
     }
 
     let jsonString = JSON.stringify(object);
-    console.log(jsonString);
     const XHR = new XMLHttpRequest();
 
     XHR.addEventListener( "load", event => {
-        
-        alert(event.target.responseText);
-
+        if(XHR.status != 201)
+        {
+            alert(event.target.responseText);
+        }
+        else 
+        {
+            document.getElementById("exercise-name").value = "";
+            document.getElementById("exercise-description").value =  "";
+            document.getElementById("exercise-video").value = "";
+            radioBtns.forEach(btn => btn.checked = false);
+        }
     });
 
     XHR.addEventListener("error", event => {

@@ -70,7 +70,7 @@ class ExerciseService:
             db = self.client['dashboard']
             collection = db['exercises']
             inserted_id = collection.insert_one(exercise_json).inserted_id
-            return Result(JSONEncoder().encode(inserted_id), 200)
+            return Result(JSONEncoder().encode(inserted_id), 201)
         except ValidationError as err:
             return Result(err.messages, 400)
         except DuplicateKeyError as err:

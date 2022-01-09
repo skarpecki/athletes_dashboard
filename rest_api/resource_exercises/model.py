@@ -74,8 +74,7 @@ class ExerciseService:
         except ValidationError as err:
             return Result(err.messages, 400)
         except DuplicateKeyError as err:
-            message = "Exercise with provided name already exists!"
-            return Result(message, 409)
+            return Result(err._message, 409)
         except PyMongoError as err:
             return (err._message, 400)
 

@@ -11,51 +11,37 @@ window.onload = function() {
         console.log(err.message);
     });
     
+    const exerciseBtn = document.getElementById("add-exercise-btn")  
+    if(exerciseBtn !== null) 
+    {
+        exerciseBtn.onclick = insertExercise;
+    } 
+
     document.getElementById("exercise-name-selector").ondblclick = function() {
         const exerciseArticle = document.getElementsByName("exercise")[0];
-        console.log(exerciseArticle);
-        // getExerciseJSON(this.value).then(function(json){
-        //     exerciseArticle.innerHTML = getExerciseArticleHTML(json);
-        // }); 
-        getExerciseJSON(this.value).then(json => 
-            exerciseArticle.innerHTML = getExerciseArticleHTML(json));
-    }
-
-    // here using addEventListner rather than .onclick as latter will not override action of sending data
-    document.getElementById("add-exercise-btn").onclick = () => {
-        const form = document.getElementById("add-exercise-form");
-        const formData = new FormData(form);
+        const exerciseForm = document.getElementById("add-exercise-form");
         const radioBtns = document.getElementsByName("type");
-        console.log(radioBtns);
-        if(!validateExerciseForm(formData) || !validateExerciseType(radioBtns))
+
+        if(typeof exerciseArticle !== "undefined")
         {
-            return false;
+            getExerciseJSON(this.value).then(json => 
+                exerciseArticle.innerHTML = getExerciseArticleHTML(json));
         }
-        let object = {};
-
-        for (let [key, value] of formData.entries()) { 
-            if(key == "video_url")
-            {
-                value = makeYoutubeEmbed(value);
-            }
-            object[key] = value;
+        else if(typeof exerciseForm !== "undefined")
+        {
+            getExerciseJSON(this.value).then(json => {
+                document.getElementById("exercise-name").value = json["name"];
+                document.getElementById("exercise-description").value =  "description" in json ? json["description"] : "";
+                document.getElementById("exercise-video").value = "video_url" in json ? json["video_url"] : "https://www.youtube.com/embed/FJRMldSmy-M";
+                radioBtns.forEach(btn => {
+                    if("type" in json && btn.value.toLowerCase() === json["type"].toLowerCase())
+                    {
+                        btn.checked = true;
+                    }
+                });
+            });
         }
-
-        let jsonString = JSON.stringify(object);
-        const XHR = new XMLHttpRequest();
-
-        XHR.addEventListener( "load", event => {
-            alert(event.target.responseText);
-        });
-
-        XHR.addEventListener("error", event => {
-            alert(event.target.responseText);
-        });
-
-        XHR.open( "POST", "http://127.0.0.1:5000/exercises/");       
-        XHR.setRequestHeader("Content-Type", "application/json;charset=UTF-8") 
-        XHR.send(jsonString);
-    }; 
+    }
 }
 
 function getExerciseArticleHTML(json) {
@@ -124,7 +110,7 @@ var handleExerciseTypeClick = (btn) => {
 }
 
 var claerSelectElements = selectElement => {
-    for(var i = selectElement.options.length - 1; i >= 0; i--)
+    for(let i = selectElement.options.length - 1; i >= 0; i--)
     {
         selectElement.remove(i);
     }
@@ -133,7 +119,6 @@ var claerSelectElements = selectElement => {
 var validateExerciseForm = formData => {
     isValid = true;
     for (let [key, value] of formData.entries()) { 
-        console.log(key);
         if(key=="description" || key=="athletes_descriptions")
         {
             continue;
@@ -166,7 +151,7 @@ var validateURL = value => {
 }
 
 var validateExerciseType = (radioBtns) => {
-    for(var i = 0; i < radioBtns.length; i++)
+    for(let i = 0; i < radioBtns.length; i++)
     {
         if(radioBtns[i].checked)
         {
@@ -179,6 +164,42 @@ var validateExerciseType = (radioBtns) => {
 
 var makeYoutubeEmbed = (url) => {
     var url = url.replace("watch?v=", "embed/");
-    console.log(url);
     return url;
+}
+
+function insertExercise() {
+    let form = document.getElementById("add-exercise-form");
+    let formData = new FormData(form);
+    let radioBtns = document.getElementsByName("type");
+    if(!validateExerciseForm(formData) || !validateExerciseType(radioBtns))
+    {
+        return false;
+    }
+    let object = {};
+
+    for (let [key, value] of formData.entries()) { 
+        if(key == "video_url")
+        {
+            value = makeYoutubeEmbed(value);
+        }
+        object[key] = value;
+    }
+
+    let jsonString = JSON.stringify(object);
+    console.log(jsonString);
+    const XHR = new XMLHttpRequest();
+
+    XHR.addEventListener( "load", event => {
+        
+        alert(event.target.responseText);
+
+    });
+
+    XHR.addEventListener("error", event => {
+        alert(event.target.responseText);
+    });
+
+    XHR.open( "POST", "http://127.0.0.1:5000/exercises/");       
+    XHR.setRequestHeader("Content-Type", "application/json;charset=UTF-8") 
+    XHR.send(jsonString);
 }

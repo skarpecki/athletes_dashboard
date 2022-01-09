@@ -1,8 +1,12 @@
 .git
+
 rest_api/__pycache__
 rest_api/common/__pycache__
-rest_api/resource_training/__pycache__
+rest_api/resource_converter/__pycache__
 rest_api/resource_exercises/__pycache__
+rest_api/resource_trainings/__pycache__
+rest_api/resource_users/__pycache__
+
 rest_api/venv
 to_do.txt
 sample

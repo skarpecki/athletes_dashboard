@@ -19,7 +19,43 @@ window.onload = function() {
         // }); 
         getExerciseJSON(this.value).then(json => 
             exerciseArticle.innerHTML = getExerciseArticleHTML(json));
-    }   
+    }
+
+    // here using addEventListner rather than .onclick as latter will not override action of sending data
+    document.getElementById("add-exercise-btn").onclick = () => {
+        const form = document.getElementById("add-exercise-form");
+        const formData = new FormData(form);
+        const radioBtns = document.getElementsByName("type");
+        console.log(radioBtns);
+        if(!validateExerciseForm(formData) || !validateExerciseType(radioBtns))
+        {
+            return false;
+        }
+        let object = {};
+
+        for (let [key, value] of formData.entries()) { 
+            if(key == "video_url")
+            {
+                value = makeYoutubeEmbed(value);
+            }
+            object[key] = value;
+        }
+
+        let jsonString = JSON.stringify(object);
+        const XHR = new XMLHttpRequest();
+
+        XHR.addEventListener( "load", event => {
+            alert(event.target.responseText);
+        });
+
+        XHR.addEventListener("error", event => {
+            alert(event.target.responseText);
+        });
+
+        XHR.open( "POST", "http://127.0.0.1:5000/exercises/");       
+        XHR.setRequestHeader("Content-Type", "application/json;charset=UTF-8") 
+        XHR.send(jsonString);
+    }; 
 }
 
 function getExerciseArticleHTML(json) {
@@ -93,3 +129,56 @@ var claerSelectElements = selectElement => {
         selectElement.remove(i);
     }
 };
+
+var validateExerciseForm = formData => {
+    isValid = true;
+    for (let [key, value] of formData.entries()) { 
+        console.log(key);
+        if(key=="description" || key=="athletes_descriptions")
+        {
+            continue;
+        }
+        if(value=="")
+        {
+            alert(`Exercise ${key} cannot be empty!`);
+            return false;
+        }
+        if(key=="video_url" && !validateURL(value))
+        {
+            alert("Provide correct video URL!");
+            return false;
+        }
+    }
+    return true;
+}
+
+var validateURL = value => {
+    let url;
+    try 
+    {
+        url = new URL(value);
+    } 
+    catch (_) 
+    {
+        return false;
+    }
+    return true;
+}
+
+var validateExerciseType = (radioBtns) => {
+    for(var i = 0; i < radioBtns.length; i++)
+    {
+        if(radioBtns[i].checked)
+        {
+            return true;
+        }
+    }
+    alert("Select exercise type!")
+    return false;
+}
+
+var makeYoutubeEmbed = (url) => {
+    var url = url.replace("watch?v=", "embed/");
+    console.log(url);
+    return url;
+}

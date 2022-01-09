@@ -1,14 +1,14 @@
 html {
-    margin: 0;
-    padding: 0;
-    height: 100%;
-  }
-  
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
 html {
-    font-size: 10px;
-    font-family:  Arial, Helvetica, sans-serif;
-    background-color: #E8E8E8;
-    -webkit-text-size-adjust: auto;
+  font-size: 10px;
+  font-family: Arial, Helvetica, sans-serif;
+  background-color: #E8E8E8;
+  -webkit-text-size-adjust: auto;
 }
 
 header {
@@ -21,119 +21,121 @@ header {
 }
 
 body {
-    width: 70%;
-    padding: 0;
-    margin: 0 auto;
+  width: 70%;
+  padding: 0;
+  margin: 0 auto;
 }
 
 h1, h2, h3 {
-    font-family: Arial, Helvetica, sans-serif;
-    color: #2a2a2a;
+  font-family: Arial, Helvetica, sans-serif;
+  color: #2a2a2a;
 }
 
 p, input, li {
-    font-family:  Arial, Helvetica, sans-serif;
-    color: #2a2a2a;
-    text-align: justify;
-  }
+  font-family: Arial, Helvetica, sans-serif;
+  color: #2a2a2a;
+  text-align: justify;
+}
 
-  h1 {
-    font-size: 4rem;
-    text-align: center;
-  }
+h1 {
+  font-size: 4rem;
+  text-align: center;
+}
 
-  h2 {
-    font-size: 3rem;
-    text-align: center;
-  }
+h2 {
+  font-size: 3rem;
+  text-align: center;
+}
 
-  h3 {
-    font-size: 2.2rem;
-  }
+h3 {
+  font-size: 2.2rem;
+}
 
-  p, li {
-    font-size: 1.6rem;
-    line-height: 1.5;
-  }
+p, li {
+  font-size: 1.6rem;
+  line-height: 1.5;
+}
 
-  nav, article, aside, footer {
-    background-color: white;
-    padding: 1%;
-  }
+nav, article, aside, footer {
+  background-color: white;
+  padding: 1%;
+}
 
-  nav {
-    height: 50px;
-    background-color: white ;
-    display: flex;
-    margin-bottom: 10px;
-  }
+nav {
+  height: 50px;
+  background-color: white;
+  display: flex;
+  margin-bottom: 10px;
+}
 
-  nav ul {
-    padding: 0;
-    list-style-type: none;
-    flex: 2;
-    display: flex;
-  }
+nav ul {
+  padding: 0;
+  list-style-type: none;
+  flex: 2;
+  display: flex;
+}
 
-  nav li {
-    display: inline;
-    text-align: center;
-    flex: 1;
-  }
+nav li {
+  display: inline;
+  text-align: center;
+  flex: 1;
+}
 
-  nav a {
-    display: inline-block;
-    font-size: 2rem;
-    text-transform: uppercase;
-    text-decoration: none;
-    color: black;
-  }
+nav a {
+  display: inline-block;
+  font-size: 2rem;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: black;
+}
 
-  main {
-    display: flex;
-    min-height: 700px;
-  }
+main {
+  display: flex;
+  min-height: 700px;
+}
 
-  article {
-    flex: 7;
-  }
+article {
+  flex: 7;
+}
 
-  aside {
-    flex: 2;
-    margin-right: 10px;
-    display: flex;
-    flex-direction: column;
-  }
+aside {
+  flex: 2;
+  margin-right: 10px;
+  display: flex;
+  flex-direction: column;
+}
 
-  aside li {
-    padding-bottom: 10px;
-    text-align: left;
-  }
-  
-  footer {
-    margin-top: 10px;
-  }
-  .dropdown {
-    height: 100%;
-    margin: auto;
-    padding-top: 3px;
-  }
-  .dropdown .dropbtn {
-    height: 50%;
-    border: none;
-    outline: none;
-    background-color: inherit;
-    font-family: inherit;
-    margin: auto;
-    
-  }
+aside li {
+  padding-bottom: 10px;
+  text-align: left;
+}
 
-  .dropdown-content {
+footer {
+  margin-top: 10px;
+}
+
+.dropdown {
+  height: 100%;
+  margin: auto;
+  padding-top: 3px;
+}
+
+.dropdown .dropbtn {
+  height: 50%;
+  border: none;
+  outline: none;
+  background-color: inherit;
+  font-family: inherit;
+  margin: auto;
+
+}
+
+.dropdown-content {
   display: none;
   position: absolute;
   background-color: white;
   min-width: 150px;
-  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
   z-index: 1;
 }
 
@@ -158,8 +160,8 @@ p, input, li {
   font-size: 3.0rem;
 }
 
-.exercise-type-options  {
-  font-family:  Arial, Helvetica, sans-serif;
+.exercise-type-options {
+  font-family: Arial, Helvetica, sans-serif;
   padding: 3px;
   font-size: 2rem;
 }
@@ -189,14 +191,14 @@ p, input, li {
   font-size: 1.8rem;
 }
 
-.add-exercise-form {
-  font-size: 2.0rem;
+#add-exercise-form {
+  font-size: 2.2rem;
   display: flex;
   flex-direction: column;
 }
 
-.add-exercise-form p {
-  font-size: 2.0rem;
+#add-exercise-form p {
+  font-size: 2.2rem;
 }
 
 .add-exercise-field {
@@ -220,6 +222,21 @@ p, input, li {
   font-size: 1.7rem;
 }
 
-#add-exercise-types label{
+#add-exercise-types label {
   margin-right: 20px;
+  
+}
+
+#add-exercise-btn {
+  margin-top: 10px;
+  width: 10%;
+  font-family: inherit;
+  background-color: #E8E8E8;
+  border-width: 1px;
+}
+
+.add-exercise-field textarea, 
+.add-exercise-field input {
+  font-size: 1.5rem;
+  font-family: inherit;
 }

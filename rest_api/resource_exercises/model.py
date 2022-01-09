@@ -1,3 +1,5 @@
+from json import dump
+import re
 from typing import Collection
 from typing_extensions import Required
 from bson.objectid import ObjectId
@@ -5,12 +7,14 @@ from marshmallow import Schema, fields, validate
 from enum import Enum
 from marshmallow.exceptions import ValidationError
 from pymongo import MongoClient, collection
+import pymongo
+from pymongo.errors import DuplicateKeyError, PyMongoError
 from common.module import Result, JSONEncoder, validateMongoFilter
 
 
 class ExerciseType(Enum):
     STRENGTH = 1
-    CONDTIONING = 2
+    CARDIO = 2
     SPEED = 3
 
 
@@ -41,8 +45,9 @@ class Exercise:
     
 
 class ExerciseSchema(Schema):
-    name = fields.Str(required=True)
-    type = fields.Str(validate=validate.OneOf([type.name for type in ExerciseType]))
+    name = fields.Str(required=True, validate=validate.Length(min=1, error="Empty name not allowed"))
+    type = fields.Str(validate=[validate.OneOf([type.name for type in ExerciseType]),
+                                validate.Length(min=1, error="Empty type not allowed")])
     video_url = fields.URL(required=False)
     description = fields.Str(required=False)
     athletes_descriptions = fields.Dict(keys=fields.Str(),
@@ -68,6 +73,12 @@ class ExerciseService:
             return Result(JSONEncoder().encode(inserted_id), 200)
         except ValidationError as err:
             return Result(err.messages, 400)
+        except DuplicateKeyError as err:
+            message = "Exercise with provided name already exists!"
+            return Result(message, 409)
+        except PyMongoError as err:
+            return (err._message, 400)
+
 
     def get_exercises(self, filter={}):
         db = self.client[self.db_name]

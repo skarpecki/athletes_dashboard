@@ -1,8 +1,8 @@
-POST http://127.0.0.1:5000//exercises HTTP/1.1
+POST http://127.0.0.1:5000/exercises/ HTTP/1.1
 content-type: application/json
 
 {
-    "name": "Squats",
+    "name": "Squat",
     "type": "STRENGTH",
     "description": "description",
     "video_url": "https://www.youtube.com/watch?v=0q1N-Blo-18",

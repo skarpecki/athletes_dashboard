@@ -1,5 +1,8 @@
 import json
+import re
 from bson import ObjectId
+from flask.helpers import make_response
+from werkzeug.wrappers import response
 
 class Result:
     def __init__(self,
@@ -22,3 +25,8 @@ def validateMongoFilter(filter: dict):
         if("==" in key or "==" in value):
             return False
     return True
+
+    
+def addCORSHeader(response):
+    response.headers["Access-Control-Allow-Origin"] = "http://localhost:9000"
+    return response

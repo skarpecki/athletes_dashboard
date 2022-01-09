@@ -44,13 +44,13 @@
                 </div>
 
                 <div class="exercise-type-options">
-                    <input type="radio" id="exercise-type2" name="exerciseTypeRadio" value="strength"
+                    <input type="radio" id="exercise-type2" name="exerciseTypeRadio" value="STRENGTH"
                         onclick="handleExerciseTypeClick(this)">
                     <label for="exercise-type2">Strength</label>
                 </div>
 
                 <div class="exercise-type-options">
-                    <input type="radio" id="exercise-type3" name="exerciseTypeRadio" value="cardio"
+                    <input type="radio" id="exercise-type3" name="exerciseTypeRadio" value="CARDIO"
                         onclick="handleExerciseTypeClick(this)">
                     <label for="exercise-type3">Cardio</label>
                 </div>
@@ -68,27 +68,34 @@
 
         <article>
             <h1>Add new exercise</h1>
-            <form class="add-exercise-form">
+            <form id="add-exercise-form" method="POST">
                 <div class="add-exercise-field">
                     <label for="exercise-name">Exercise name</label>
-                    <input type="text" id="exercise-name" name="exerciseName">
+                    <input type="text" id="exercise-name" name="name" required>
                 </div>
 
                 <div class="add-exercise-field">
                     <p>Exercise type</p>
                     <div id="add-exercise-types">
-                        <input type="radio" id="add-exercise-type1" name="addExerciseTypeRadio" value="strength">
+                        <input type="radio" id="add-exercise-type1" name="type" value="STRENGTH" required>
                         <label for="add-exercise-type1">Strength</label>
 
-                        <input type="radio" id="add-exercise-type2" name="addExerciseTypeRadio" value="cardio">
+                        <input type="radio" id="add-exercise-type2" name="type" value="CARDIO">
                         <label for="add-exercise-type2">Cardio</label>
                     </div>
                 </div>
 
                 <div class="add-exercise-field">
-                    <label for="exercise-description">Exercise description</label>
-                    <textarea id="exercise-description" name="exerciseDescription" maxlength="1000"></textarea>
+                    <label for="exercise-description">Exercise description (optional)</label>
+                    <textarea id="exercise-description" name="description" maxlength="1000"></textarea>
                 </div>
+
+                <div class="add-exercise-field">
+                    <label for="exercise-video">Exercise video URL</label>
+                    <input type="url" id="exercise-video" name="video_url" required>
+                </div>
+
+                <button type="button" id="add-exercise-btn" form="add-exercise-form" value="Add">Add</button>
             </form>
         </article>
     </main>

@@ -1,4 +1,12 @@
 .git
+/svgs/
+/ui_ideas/
+/screenshots/
+/data/
+package-lock.json
+package.json
+test.json
+
 
 rest_api/__pycache__
 rest_api/common/__pycache__

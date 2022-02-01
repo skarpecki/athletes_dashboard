@@ -147,6 +147,17 @@ var generateChartConfig = (data) => {
 }
 
 
+var colorTypeButtons = (allButons, notToGreyOutBtnIdx) => {
+    for(let i = 0; i < allButons.length; i++) {
+        if (i === notToGreyOutBtnIdx) {
+            allButons[i].style.backgroundColor = "#b8b3b3";
+        } else {
+            allButons[i].style.backgroundColor =  "";
+        }
+    }
+}
+
+
 
 window.onload = () => {
     var ctx = null;
@@ -170,101 +181,102 @@ window.onload = () => {
         document.querySelector(".navbar-nav-menu").style.display = "none";
     }
 
-    if(ctx !== null) {
-        const velocityFile = document.querySelector("#velocityFile")
-        const labels = document.querySelectorAll("label");
-        velocityFile.onchange = (event) => {
-            const label = getLabel(labels, velocityFile.id);
-            const span = label.querySelector("span");
-            if (event.target.files.length == 0) {
-                span.innerHTML = "Choose a velocity file..."
-            } else {
-                const file = event.target.files[0];
-                span.innerHTML = file.name;
-            }
+    const velocityFile = document.querySelector("#velocityFile")
+    const labels = document.querySelectorAll("label");
+    velocityFile.onchange = (event) => {
+        const label = getLabel(labels, velocityFile.id);
+        const span = label.querySelector("span");
+        if (event.target.files.length == 0) {
+            span.innerHTML = "Choose a velocity file..."
+        } else {
+            const file = event.target.files[0];
+            span.innerHTML = file.name;
         }
-    
-        const forceFile = document.querySelector("#forceFile")
-        forceFile.onchange = (event) => {
-            const label = getLabel(labels, forceFile.id);
-            const span = label.querySelector("span");
-            if (event.target.files.length == 0) {
-                span.innerHTML = "Choose a force file..."
-            } else {
-                const file = event.target.files[0];
-                span.innerHTML = file.name;
-    
-            }
-        }
-    
-        document.querySelector("#uploadFiles").onclick = () => {
-            const cmjTable = document.querySelector("#cmjTable");
-            const forceCSV = forceFile.files[0];
-            const velCSV = velocityFile.files[0];
-            let formData = new FormData();
-            formData.append("forceFile", forceCSV);
-            formData.append("velocityFile", velCSV);
-            const XHR = new XMLHttpRequest();
-            XHR.addEventListener("load", event => {
-                if (XHR.status != 200) {
-                    alert(event.target.responseText);
-                }
-                const data = JSON.parse(event.target.responseText);
-                const stats = data["stats"];
-                cmjData = data["data"];
-                fillCMJTable(cmjTable, stats);
-                myScatter = new Chart(ctx, 
-                    generateChartConfig(generateChartForceData(cmjData))
-                    );
-                showPlotElements();
-            });
-            XHR.addEventListener("error", event => {
-                console.log("error");
-                alert(event.target.responseText);
-            });
-            XHR.open("POST", "http://127.0.0.1:5000/analytics/cmj/");
-            XHR.send(formData);
-        }
-    
-        let chartTypeBtns = document.querySelectorAll(".select-chart-type-btn");
-    
-        for(let i = 0; i < chartTypeBtns.length; i++) {
-    
-            if(chartTypeBtns[i].value == "vel") {
-                chartTypeBtns[i].onclick = () => {
-                    data = generateChartVelocityData(cmjData);
-                    config = generateChartConfig(data);
-                    myScatter.destroy();
-                    myScatter = new Chart(ctx, config);
-                }
-            };
-    
-            if(chartTypeBtns[i].value == "force") {
-                chartTypeBtns[i].onclick = () => {
-                    data = generateChartForceData(cmjData);
-                    config = generateChartConfig(data);
-                    myScatter.destroy();
-                    myScatter = new Chart(ctx, config);
-                }
-            };
-    
-            if(chartTypeBtns[i].value == "acc") {
-                chartTypeBtns[i].onclick = () => {
-                    data = generateChartAccelerationData(cmjData);
-                    config = generateChartConfig(data);
-                    myScatter.destroy();
-                    myScatter = new Chart(ctx, config);
-                }
-            };
-            
-        }
-    
-        document.querySelector("#resetZoomBtn").onclick = () => {
-            console.log("click");
-            myScatter.resetZoom();
-        }
-
     }
+
+    const forceFile = document.querySelector("#forceFile")
+    forceFile.onchange = (event) => {
+        const label = getLabel(labels, forceFile.id);
+        const span = label.querySelector("span");
+        if (event.target.files.length == 0) {
+            span.innerHTML = "Choose a force file..."
+        } else {
+            const file = event.target.files[0];
+            span.innerHTML = file.name;
+
+        }
+    }
+
+    document.querySelector("#uploadFiles").onclick = () => {
+        const cmjTable = document.querySelector("#cmjTable");
+        const forceCSV = forceFile.files[0];
+        const velCSV = velocityFile.files[0];
+        let formData = new FormData();
+        formData.append("forceFile", forceCSV);
+        formData.append("velocityFile", velCSV);
+        const XHR = new XMLHttpRequest();
+        XHR.addEventListener("load", event => {
+            if (XHR.status != 200) {
+                alert(event.target.responseText);
+            }
+            const data = JSON.parse(event.target.responseText);
+            const stats = data["stats"];
+            cmjData = data["data"];
+            fillCMJTable(cmjTable, stats);
+            myScatter = new Chart(ctx, 
+                generateChartConfig(generateChartForceData(cmjData))
+                );
+            showPlotElements();
+        });
+        XHR.addEventListener("error", event => {
+            console.log("error");
+            alert(event.target.responseText);
+        });
+        XHR.open("POST", "http://127.0.0.1:5000/analytics/cmj/");
+        XHR.send(formData);
+    }
+
+    let chartTypeBtns = document.querySelectorAll(".select-chart-type-btn");
+
+    for(let i = 0; i < chartTypeBtns.length; i++) {
+
+        if(chartTypeBtns[i].value == "vel") {
+            chartTypeBtns[i].onclick = () => {
+                data = generateChartVelocityData(cmjData);
+                config = generateChartConfig(data);
+                myScatter.destroy();
+                myScatter = new Chart(ctx, config);
+                colorTypeButtons(chartTypeBtns, i);
+            }
+        };
+
+        if(chartTypeBtns[i].value == "force") {
+            chartTypeBtns[i].onclick = () => {
+                data = generateChartForceData(cmjData);
+                config = generateChartConfig(data);
+                myScatter.destroy();
+                myScatter = new Chart(ctx, config);
+                colorTypeButtons(chartTypeBtns, i);
+            }
+        };
+
+        if(chartTypeBtns[i].value == "acc") {
+            chartTypeBtns[i].onclick = () => {
+                data = generateChartAccelerationData(cmjData);
+                config = generateChartConfig(data);
+                myScatter.destroy();
+                myScatter = new Chart(ctx, config);
+                colorTypeButtons(chartTypeBtns, i);
+            }
+        };
+            
+    } 
+    
+    document.querySelector("#resetZoomBtn").onclick = () => {
+        console.log("click");
+        myScatter.resetZoom();
+    }
+
     // navbar.onmouseover = () => {
     //     document.querySelector(".header").style.left = "16rem"
     // }

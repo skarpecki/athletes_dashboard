@@ -1,0 +1,107 @@
+.cmj-dashboard-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 90%;
+    margin: auto;
+    padding: 1rem;
+}
+
+
+.upload-buttons {
+    display: flex;
+    flex-direction: column;
+    width: 20rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.inputfile {
+	width: 0.1px;
+	height: 0.1px;
+	opacity: 0;
+	overflow: hidden;
+	position: absolute;
+	z-index: -1;
+}
+
+.inputfileLabel {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: black;
+    background-color: var(--bg-body);
+    display: inline-block;
+    justify-items: center;
+    cursor: pointer;
+    margin-top: 1rem;
+    border: black solid 1px;
+}
+
+#uploadFiles {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: black;
+    background-color: var(--bg-body);
+    display: inline-block;
+    justify-items: center;
+    cursor: pointer;
+    margin-top: 1rem;
+    border: black solid 1px;
+}
+
+.inputfileLabel:hover {
+    background-color: limegreen;
+}
+
+#uploadFiles:hover {
+    background-color: limegreen;
+}
+
+
+.cmjTable, .cmjTable table, .cmjTable th, .cmjTable td  {
+    table-layout: fixed;
+    background-color: white;
+    border: 	#A9A9A9	 1px solid;
+    border-collapse: collapse;
+  }
+  .cmjTable th {
+      text-align: left;
+      height: 2rem;
+      font-weight: normal;
+  }
+
+  .cmjTable td {
+      font-size: 1rem;
+      height: 2rem;
+  }
+
+  .cmjTable tr:hover td {
+    background-color: #B2FFB2;
+  }
+
+  .cmjTable th:hover {
+    background-color: #B2FFB2;
+  }
+
+
+
+  #resetZoomBtn {
+      font-size: 1.0rem;
+      margin: 0 3rem;
+  }
+
+  .select-chart-type {
+    font-size: 1.0rem;
+    width: 50%;
+    margin: auto;
+    text-align:center;
+  }
+
+ .select-chart-type {
+     display: none;
+ }
+
+ #resetZoomBtn {
+     display: none;
+ }

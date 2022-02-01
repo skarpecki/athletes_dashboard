@@ -208,6 +208,8 @@ window.onload = () => {
     }
 
     document.querySelector("#uploadFiles").onclick = () => {
+        document.body.style.cursor='wait';
+        
         const cmjTable = document.querySelector("#cmjTable");
         const forceCSV = forceFile.files[0];
         const velCSV = velocityFile.files[0];
@@ -218,6 +220,7 @@ window.onload = () => {
         XHR.addEventListener("load", event => {
             if (XHR.status != 200) {
                 alert(event.target.responseText);
+                document.body.style.cursor='default';
             }
             const data = JSON.parse(event.target.responseText);
             const stats = data["stats"];
@@ -227,10 +230,12 @@ window.onload = () => {
                 generateChartConfig(generateChartForceData(cmjData))
                 );
             showPlotElements();
+            document.body.style.cursor='default';
         });
         XHR.addEventListener("error", event => {
             console.log("error");
             alert(event.target.responseText);
+            document.body.style.cursor='default';
         });
         XHR.open("POST", "http://127.0.0.1:5000/analytics/cmj/");
         XHR.send(formData);
@@ -247,6 +252,7 @@ window.onload = () => {
                 myScatter.destroy();
                 myScatter = new Chart(ctx, config);
                 colorTypeButtons(chartTypeBtns, i);
+                console.log(document.body.style.cursor);
             }
         };
 

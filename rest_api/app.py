@@ -7,10 +7,13 @@ app = Flask(__name__)
 app.config["FLASK_ENV"] = "development"
 
 from resource_trainings.controller import trainings_bp
-app.register_blueprint(trainings_bp, url_prefix='/trainings')
+app.register_blueprint(trainings_bp, url_prefix="/trainings")
 
 from resource_exercises.controller import exercises_bp
-app.register_blueprint(exercises_bp, url_prefix='/exercises')
+app.register_blueprint(exercises_bp, url_prefix="/exercises")
+
+from resource_analytics.controller import analytics_bp
+app.register_blueprint(analytics_bp, url_prefix="/analytics")
 
 @app.route("/")
 def hello_world():

@@ -147,9 +147,9 @@ var generateChartConfig = (data) => {
 }
 
 
-var colorTypeButtons = (allButons, notToGreyOutBtnIdx) => {
+var colorTypeButtons = (allButons, btnToGreyIdx) => {
     for(let i = 0; i < allButons.length; i++) {
-        if (i === notToGreyOutBtnIdx) {
+        if (i === btnToGreyIdx) {
             allButons[i].style.backgroundColor = "#b8b3b3";
         } else {
             allButons[i].style.backgroundColor =  "";
@@ -247,32 +247,31 @@ window.onload = () => {
 
         if(chartTypeBtns[i].value == "vel") {
             chartTypeBtns[i].onclick = () => {
+                colorTypeButtons(chartTypeBtns, i);
                 data = generateChartVelocityData(cmjData);
                 config = generateChartConfig(data);
                 myScatter.destroy();
                 myScatter = new Chart(ctx, config);
-                colorTypeButtons(chartTypeBtns, i);
-                console.log(document.body.style.cursor);
             }
         };
 
         if(chartTypeBtns[i].value == "force") {
             chartTypeBtns[i].onclick = () => {
+                colorTypeButtons(chartTypeBtns, i);
                 data = generateChartForceData(cmjData);
                 config = generateChartConfig(data);
                 myScatter.destroy();
                 myScatter = new Chart(ctx, config);
-                colorTypeButtons(chartTypeBtns, i);
             }
         };
 
         if(chartTypeBtns[i].value == "acc") {
             chartTypeBtns[i].onclick = () => {
+                colorTypeButtons(chartTypeBtns, i);
                 data = generateChartAccelerationData(cmjData);
                 config = generateChartConfig(data);
                 myScatter.destroy();
                 myScatter = new Chart(ctx, config);
-                colorTypeButtons(chartTypeBtns, i);
             }
         };
             

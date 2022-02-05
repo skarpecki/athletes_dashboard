@@ -105,6 +105,7 @@
 
 #resetZoomBtn {
     display: none;
+    padding: 0.3rem 0.6rem;
 }
 
 .select-chart-type-btn {
@@ -118,4 +119,12 @@
 
 .select-chart-type-btn:hover {
     background-color: #b8b3b3;
+}
+
+#resetZoomBtn {
+    background-color: white;
+    border: black solid 1px;
+    cursor: pointer;
+    letter-spacing: 0.1ch;
+    font-size: 1.05rem;
 }

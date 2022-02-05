@@ -25,6 +25,7 @@ var fillCMJTable = (table, json) => {
 var showPlotElements = () => {
     document.querySelector(".select-chart-type").style.display = "block";
     document.querySelector("#resetZoomBtn").style.display = "block";
+    document.querySelector("#myChart").style.background = "white";
 }
 
 var generateChartForceData = (jsonCMJ) => {

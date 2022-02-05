@@ -128,3 +128,7 @@
     letter-spacing: 0.1ch;
     font-size: 1.05rem;
 }
+
+#myChart {
+    margin: 1rem 0;
+}

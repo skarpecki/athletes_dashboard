@@ -76,11 +76,11 @@ var getCMJPlotData = (json, xCol, yCol) => {
 }
 
 var generateChartVelocityData = (jsonCMJ) => {
-    const combinedForceData = getCMJPlotData(jsonCMJ, "Time (s)", "Velocity (M/s)");
+    const combinedForceData = getCMJPlotData(jsonCMJ, "Time (s)", "Velocity (m/s)");
 
     const data = {
         datasets: [{
-            label: 'Velocity (M/s)',
+            label: 'Velocity (m/s)',
             data: combinedForceData,
             backgroundColor: 'rgb(255, 99, 132)',
             showLine: true,

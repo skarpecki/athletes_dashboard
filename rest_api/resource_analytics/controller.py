@@ -1,6 +1,6 @@
 from urllib.request import Request
 from flask import Blueprint, request, make_response
-from .model import CMJForceVelStats
+from .model import AnalyticsService
 
 analytics_bp = Blueprint('analytics', __name__)
 
@@ -10,8 +10,7 @@ def analytics_cmj():
         try:
             forceFile = request.files.get("forceFile")
             velFile = request.files.get("velocityFile")
-            cmj = CMJForceVelStats.from_csv_files(velFile, forceFile)
-            data = cmj.get_cmj_data_json()
+            data = AnalyticsService.get_cmj_values(velFile, forceFile)
             resp = make_response(data, 200)
             resp.headers["Content-Type"] = "application/json"
             return resp

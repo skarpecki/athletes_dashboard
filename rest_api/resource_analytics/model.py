@@ -2,6 +2,8 @@ import numpy as np
 import pandas as pd
 from pymongo import MongoClient
 from enum import Enum
+from pprint import pprint as pp
+
 
 class JumpDataType(Enum):
     VELOCITY = 1
@@ -168,7 +170,7 @@ class CMJJumpModel(JumpModel):
     @property
     def acc_data(self):
         if self._acc_data is None:
-            acc_diff = np.diff(self.vel_data.value_arr, prepend=0) / self.vel_data.time_arr
+            acc_diff = np.diff(self.vel_data.value_arr, prepend=0) / np.diff(self.vel_data.time_arr, prepend=0)
             self._acc_data = JumpData(JumpDataType.ACCELERATION, self.vel_data.time_arr, acc_diff, "Acceleration (m/s^2)")
         return self._acc_data
     
@@ -225,8 +227,9 @@ class CMJJumpModel(JumpModel):
         # negative phase - ind_unwght_start to ind_brk_end
         # positive phase ind_brk_start to ind_prop_end
 
+        arr = self.vel_data.value_arr[ind_prop_start : ind_prop_end]
 
-        stats = {'v_peak_prop': self.vel_data.value_arr[ind_prop_start : ind_prop_end].max(),
+        stats = {'v_peak_prop': arr.max(),
                  'v_peak_neg': self.vel_data.value_arr[ind_unwght_start : ind_brk_end].min(),
                  'v_avg_neg': self.vel_data.value_arr[ind_unwght_start : ind_brk_end].mean(),
                  't_to_v_peak_prop': self.vel_data.time_arr[v_peak_prop_idx] - self.vel_data.time_arr[ind_prop_start],
@@ -234,7 +237,7 @@ class CMJJumpModel(JumpModel):
                  'a_avg_100_prop': self.acc_data.value_arr[ind_prop_start: ind_prop_start + 100].mean(),
                  'a_peak_100_prop': self.acc_data.value_arr[ind_prop_start: ind_prop_start + 100].max(),
                  'v_peak_100_prop': self.vel_data.value_arr[ind_prop_start: ind_prop_start + 100].max(),
-                 'a_peak_pos': self.acc_data.value_arr.max()
+                 'a_peak_pos': self.acc_data.value_arr[ind_brk_start: ind_prop_end].max()
         }
 
         return stats
@@ -252,8 +255,6 @@ class CMJJumpModel(JumpModel):
                          "Combined (N)": self.combined_force_data.value_arr 
                          }
             df_data = pd.DataFrame(data_dict)
-            df_data.to_csv("data.csv")
-            print(df_data)
             data_json = df_data.to_dict(orient="records")
             stats_json = self.get_cmj_stats()
             return {"data": data_json, "stats": stats_json}
@@ -269,8 +270,8 @@ if __name__ == "__main__":
     force_csv = CMJJumpForceCSVReader(force_path)
     vel_csv = CMJJumpVelocityCSVReader(vel_path)
     cmj_jump = CMJJumpModel(force_csv.combined_force, vel_csv.velocity, force_csv.left_force, force_csv.right_force)
-    cmj_jump.get_cmj_data_json()
-    pass
+    pp(cmj_jump.get_cmj_stats())
+    
 
 
     # cmj_vel_attr = CMJAttribute(rf"{path}\robin\velocity.csv",

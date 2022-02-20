@@ -219,17 +219,15 @@ class CMJJumpModel(JumpModel):
         ind_brk_end = idxs["braking"][1]
         ind_prop_start = idxs["propulsive"][0]
         ind_prop_end = idxs["propulsive"][1]
-        v_peak_prop_idx = np.argmax(self.vel_data.value_arr[ind_prop_start : ind_prop_end])
-
+        v_peak_prop_idx = ind_prop_start + np.argmax(self.vel_data.value_arr[ind_prop_start : ind_prop_end])
+        
         # unweighting phase - ind_unwght_start to ind_unwght_end
         # braking phase - ind_brk_start to ind_brk_end
         # propulsive phase - ind_prop_start to ind_prop_end
         # negative phase - ind_unwght_start to ind_brk_end
         # positive phase ind_brk_start to ind_prop_end
 
-        arr = self.vel_data.value_arr[ind_prop_start : ind_prop_end]
-
-        stats = {'v_peak_prop': arr.max(),
+        stats = {'v_peak_prop': self.vel_data.value_arr[ind_prop_start : ind_prop_end].max(),
                  'v_peak_neg': self.vel_data.value_arr[ind_unwght_start : ind_brk_end].min(),
                  'v_avg_neg': self.vel_data.value_arr[ind_unwght_start : ind_brk_end].mean(),
                  't_to_v_peak_prop': self.vel_data.time_arr[v_peak_prop_idx] - self.vel_data.time_arr[ind_prop_start],

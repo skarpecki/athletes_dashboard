@@ -161,6 +161,7 @@ var colorTypeButtons = (allButons, btnToGreyIdx) => {
 
 
 window.onload = () => {
+    var plotDiv = document.querySelector(".plot")
     var ctx = null;
     var myScatter = null;
     if(document.getElementById('myChart') !== null) {
@@ -232,6 +233,7 @@ window.onload = () => {
                 );
             showPlotElements();
             document.body.style.cursor='default';
+            plotDiv.scrollIntoView();
         });
         XHR.addEventListener("error", event => {
             console.log("error");
@@ -253,6 +255,7 @@ window.onload = () => {
                 config = generateChartConfig(data);
                 myScatter.destroy();
                 myScatter = new Chart(ctx, config);
+                plotDiv.scrollIntoView();
             }
         };
 
@@ -263,6 +266,7 @@ window.onload = () => {
                 config = generateChartConfig(data);
                 myScatter.destroy();
                 myScatter = new Chart(ctx, config);
+                plotDiv.scrollIntoView();
             }
         };
 
@@ -273,6 +277,7 @@ window.onload = () => {
                 config = generateChartConfig(data);
                 myScatter.destroy();
                 myScatter = new Chart(ctx, config);
+                plotDiv.scrollIntoView();
             }
         };
             

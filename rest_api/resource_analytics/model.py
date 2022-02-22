@@ -21,8 +21,8 @@ class AnalyticsService:
     
     @staticmethod
     def get_cmj_values(vel_csv_file, force_csv_file):
-        force_csv = HawkinCMJJumpForceCSVReader(force_csv_file)
-        vel_csv = HawkinCMJJumpVelocityCSVReader(vel_csv_file)
+        force_csv = HawkinJumpForceCSVReader(force_csv_file)
+        vel_csv = HawkinJumpVelocityCSVReader(vel_csv_file)
         cmj_jump = CMJJumpModel(force_csv.combined_force, vel_csv.velocity, force_csv.left_force, force_csv.right_force)
         return cmj_jump.get_cmj_data_json()
 
@@ -111,7 +111,7 @@ class JumpData:
             raise ValueError("Times and values array are of different length")
         return values_count
 
-class HawkinCMJJumpForceCSVReader(CSVReader):
+class HawkinJumpForceCSVReader(CSVReader):
     def __init__(self, csv_file):
         self.jump_data_type = JumpDataType.FORCE
         csv_header = ["Time (s)", "Left (N)", "Right (N)", "Combined (N)"]
@@ -132,7 +132,7 @@ class HawkinCMJJumpForceCSVReader(CSVReader):
                                 self.df[self.csv_header[3]].to_numpy(),
                                 self.csv_header[3])
                                     
-class HawkinCMJJumpVelocityCSVReader(CSVReader):
+class HawkinJumpVelocityCSVReader(CSVReader):
     def __init__(self, csv_file):
         self.jump_data_type = JumpDataType.VELOCITY
         csv_header = ["Time (s)", "Velocity (M/s)"]
@@ -263,15 +263,57 @@ class CMJJumpModel(JumpModel):
         else:
             raise ValueError("Arrays have different legnths")
 
+
+class ContinuedJumpModel(JumpModel):
+    def __init__(self, combined_force_data: JumpData, left_force_data=None, right_force_data=None):
+        super().__init__()
+        self._system_weight = None
+        self.combined_force_data = combined_force_data
+        self.left_force_data = left_force_data
+        self.right_force_data = right_force_data
+
+    @property
+    def system_weight(self):
+        if self._system_weight is None:
+            mean = self.combined_force_data.value_arr[:1000].mean()
+            std = self.combined_force_data.value_arr[:1000].std()
+            self._system_weight = SystemWeight(mean, std)
+        return self._system_weight
+
+    def get_jumps_indexes(self, force_threshold):
+        indexes = []
+        indexes_row = [-1, -1]
+        min_index = 0
+        max_index = len(self.combined_force_data.value_arr)
+
+        it = np.nditer(self.combined_force_data.value_arr, flags=["c_index"])
+        for x in it:
+            if indexes_row[0] < 0 and x <= force_threshold:
+                indexes_row[0] = max(it.index - 1500, min_index)
+
+            if indexes_row[0] > 0 and indexes_row[1] < 0 and x >= force_threshold:
+                indexes_row[1] = min(it.index + 1500, max_index)
+                indexes.append(indexes_row)
+                indexes_row = [-1, -1]
+
+        return indexes
+
+
+
 if __name__ == "__main__":
     force_path = r"D:\DevProjects\PythonProjects\athletes_dashboard\data\force\Adam_Lewandowski-10_14_2020.csv"
     vel_path = r"D:\DevProjects\PythonProjects\athletes_dashboard\data\velocity\Adam_Lewandowski-10_14_2020.csv"
+    csj_path = r"D:\DevProjects\PythonProjects\Hawkin-Dynamics\data\Szymon Karpecki\Force-Szymon_Karpęcki_Multi_Rebound-09_23_2020_04-08-56.csv"
 
-    force_csv = HawkinCMJJumpForceCSVReader(force_path)
-    vel_csv = HawkinCMJJumpVelocityCSVReader(vel_path)
-    cmj_jump = CMJJumpModel(force_csv.combined_force, vel_csv.velocity, force_csv.left_force, force_csv.right_force)
-    pp(cmj_jump.get_cmj_data_json())
-    
+    # force_csv = HawkinJumpForceCSVReader(force_path)
+    # vel_csv = HawkinJumpVelocityCSVReader(vel_path)
+    # cmj_jump = CMJJumpModel(force_csv.combined_force, vel_csv.velocity, force_csv.left_force, force_csv.right_force)
+    # pp(cmj_jump.get_cmj_data_json())
+
+    force_csj_csv = HawkinJumpForceCSVReader(csj_path)
+    csj_jump = ContinuedJumpModel(force_csj_csv.combined_force)
+
+    pp(len(csj_jump.get_jumps_indexes()))
 
 
     # cmj_vel_attr = CMJAttribute(rf"{path}\robin\velocity.csv",

@@ -21,8 +21,8 @@ class AnalyticsService:
     
     @staticmethod
     def get_cmj_values(vel_csv_file, force_csv_file):
-        force_csv = CMJJumpForceCSVReader(force_csv_file)
-        vel_csv = CMJJumpVelocityCSVReader(vel_csv_file)
+        force_csv = HawkinCMJJumpForceCSVReader(force_csv_file)
+        vel_csv = HawkinCMJJumpVelocityCSVReader(vel_csv_file)
         cmj_jump = CMJJumpModel(force_csv.combined_force, vel_csv.velocity, force_csv.left_force, force_csv.right_force)
         return cmj_jump.get_cmj_data_json()
 
@@ -36,7 +36,7 @@ class SystemWeight:
         head_values = arr[:1000]
         return SystemWeight(head_values.mean(), head_values.std())
 
-class JumpCSVReader:
+class CSVReader:
     def __init__(self, csv_file, csv_header):
         self.csv_file = csv_file
         self.csv_header = csv_header
@@ -111,7 +111,7 @@ class JumpData:
             raise ValueError("Times and values array are of different length")
         return values_count
 
-class CMJJumpForceCSVReader(JumpCSVReader):
+class HawkinCMJJumpForceCSVReader(CSVReader):
     def __init__(self, csv_file):
         self.jump_data_type = JumpDataType.FORCE
         csv_header = ["Time (s)", "Left (N)", "Right (N)", "Combined (N)"]
@@ -132,7 +132,7 @@ class CMJJumpForceCSVReader(JumpCSVReader):
                                 self.df[self.csv_header[3]].to_numpy(),
                                 self.csv_header[3])
                                     
-class CMJJumpVelocityCSVReader(JumpCSVReader):
+class HawkinCMJJumpVelocityCSVReader(CSVReader):
     def __init__(self, csv_file):
         self.jump_data_type = JumpDataType.VELOCITY
         csv_header = ["Time (s)", "Velocity (M/s)"]
@@ -150,7 +150,7 @@ class JumpModel:
         self.gravity_acc = 9.81        
 
 class CMJJumpModel(JumpModel):
-    def __init__(self, combined_force_data: JumpData, vel_data: JumpData, left_force_data: JumpData, right_force_data: JumpData):
+    def __init__(self, combined_force_data: JumpData, vel_data: JumpData, left_force_data=None, right_force_data=None):
         super().__init__()
         self._system_weight = None
         self.combined_force_data = combined_force_data
@@ -248,10 +248,14 @@ class CMJJumpModel(JumpModel):
             data_dict = {"Time (s)": self.vel_data.time_arr,
                          "Velocity (m/s)": self.vel_data.value_arr,
                          "Acceleration (m/s^2)": self.acc_data.value_arr,
-                         "Left (N)": self.left_force_data.value_arr,
-                         "Right (N)": self.right_force_data.value_arr,
                          "Combined (N)": self.combined_force_data.value_arr 
                          }
+
+            if self.left_force_data is not None:
+                data_dict["Left (N)"] = self.left_force_data.value_arr
+            if self.right_force_data is not None:
+                data_dict["Right (N)"] = self.right_force_data.value_arr
+
             df_data = pd.DataFrame(data_dict)
             data_json = df_data.to_dict(orient="records")
             stats_json = self.get_cmj_stats()
@@ -259,16 +263,14 @@ class CMJJumpModel(JumpModel):
         else:
             raise ValueError("Arrays have different legnths")
 
-
-
 if __name__ == "__main__":
     force_path = r"D:\DevProjects\PythonProjects\athletes_dashboard\data\force\Adam_Lewandowski-10_14_2020.csv"
     vel_path = r"D:\DevProjects\PythonProjects\athletes_dashboard\data\velocity\Adam_Lewandowski-10_14_2020.csv"
 
-    force_csv = CMJJumpForceCSVReader(force_path)
-    vel_csv = CMJJumpVelocityCSVReader(vel_path)
+    force_csv = HawkinCMJJumpForceCSVReader(force_path)
+    vel_csv = HawkinCMJJumpVelocityCSVReader(vel_path)
     cmj_jump = CMJJumpModel(force_csv.combined_force, vel_csv.velocity, force_csv.left_force, force_csv.right_force)
-    pp(cmj_jump.get_cmj_stats())
+    pp(cmj_jump.get_cmj_data_json())
     
 
 

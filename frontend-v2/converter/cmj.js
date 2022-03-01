@@ -66,10 +66,13 @@ var generateChartForceData = (jsonCMJ) => {
 
 var getCMJPlotData = (json, xCol, yCol) => {
     let data = [];
-    for (let i = 0; i < json.length; i++) {
+    let xArr = json[xCol]
+    let yArr = json[yCol]
+
+    for (let i = 0; i < xArr.length; i++) {
         data.push({
-            x: json[i][xCol],
-            y: json[i][yCol]
+            x: xArr[i],
+            y: yArr[i]
         })
     }
     return data;

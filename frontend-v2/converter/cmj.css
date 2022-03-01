@@ -121,6 +121,10 @@
     background-color: #b8b3b3;
 }
 
+#resetZoomBtn:hover {
+    background-color: #b8b3b3;
+}
+
 #resetZoomBtn {
     background-color: white;
     border: black solid 1px;
@@ -128,6 +132,7 @@
     letter-spacing: 0.1ch;
     font-size: 1.05rem;
 }
+
 
 #myChart {
     margin: 1rem 0;

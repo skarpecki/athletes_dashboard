@@ -3,6 +3,8 @@ import pandas as pd
 from pymongo import MongoClient
 from enum import Enum
 from pprint import pprint as pp
+import json
+import itertools
 
 
 class JumpDataType(Enum):
@@ -24,7 +26,7 @@ class AnalyticsService:
         force_csv = HawkinJumpForceCSVReader(force_csv_file)
         vel_csv = HawkinJumpVelocityCSVReader(vel_csv_file)
         cmj_jump = CMJJumpModel(force_csv.combined_force, vel_csv.velocity, force_csv.left_force, force_csv.right_force)
-        return cmj_jump.get_cmj_data_json()
+        return cmj_jump.toJSON()
 
 class SystemWeight:
     def __init__(self, weight, weight_std):
@@ -148,18 +150,13 @@ class HawkinJumpVelocityCSVReader(CSVReader):
                                     self.csv_header[1]) 
 
 class JumpModel:
-    def __init__(self):
-        self.gravity_acc = 9.81        
-
-class CMJJumpModel(JumpModel):
-    def __init__(self, combined_force_data: JumpData, vel_data: JumpData, left_force_data=None, right_force_data=None):
-        super().__init__()
-        self._system_weight = None
+    def __init__(self, combined_force_data: JumpData, vel_data=None, left_force_data=None, right_force_data=None):
+        self.gravity_acc = 9.81
         self.combined_force_data = combined_force_data
         self.vel_data = vel_data
         self.left_force_data = left_force_data
         self.right_force_data = right_force_data
-        self._acc_data = None
+        self._system_weight = None
 
     @property
     def system_weight(self):
@@ -168,6 +165,28 @@ class CMJJumpModel(JumpModel):
             std = self.combined_force_data.value_arr[:1000].std()
             self._system_weight = SystemWeight(mean, std)
         return self._system_weight
+
+    def get_jump_data_dict(self):
+        data_dict = {"Time (s)": self.combined_force_data.time_arr.tolist(),
+                    "Combined (N)": self.combined_force_data.value_arr.tolist()}
+        if self.vel_data is not None:
+            data_dict["Velocity (m/s)"] = self.vel_data.value_arr.tolist()
+        if self.left_force_data is not None:
+            data_dict["Left (N)"] = self.left_force_data.value_arr.tolist()
+        if self.right_force_data is not None:
+            data_dict["Right (N)"] = self.right_force_data.value_arr.tolist()
+        return data_dict
+
+
+class CMJJumpModel(JumpModel):
+    def __init__(self, combined_force_data: JumpData, vel_data: JumpData, left_force_data=None, right_force_data=None):
+        super().__init__(combined_force_data, vel_data, left_force_data, right_force_data)
+        self._system_weight = None
+        self.combined_force_data = combined_force_data
+        self.vel_data = vel_data
+        self.left_force_data = left_force_data
+        self.right_force_data = right_force_data
+        self._acc_data = None
 
     @property
     def acc_data(self):
@@ -243,32 +262,18 @@ class CMJJumpModel(JumpModel):
         return stats
 
 
-    def get_cmj_data_json(self):
-        if (self.vel_data.items_count == self.combined_force_data.items_count
-            and 
-            self.vel_data.items_count == self.acc_data.items_count):
-            data_dict = {"Time (s)": self.vel_data.time_arr,
-                         "Velocity (m/s)": self.vel_data.value_arr,
-                         "Acceleration (m/s^2)": self.acc_data.value_arr,
-                         "Combined (N)": self.combined_force_data.value_arr 
-                         }
-
-            if self.left_force_data is not None:
-                data_dict["Left (N)"] = self.left_force_data.value_arr
-            if self.right_force_data is not None:
-                data_dict["Right (N)"] = self.right_force_data.value_arr
-
-            df_data = pd.DataFrame(data_dict)
-            data_json = df_data.to_dict(orient="records")
-            stats_json = self.get_cmj_stats()
-            return {"data": data_json, "stats": stats_json}
-        else:
-            raise ValueError("Arrays have different legnths")
+    def toJSON(self):
+        data_dict = self.get_jump_data_dict()
+        data_dict["Acceleration (m/s^2)"] = self.acc_data.value_arr.tolist()
+        # df_data = pd.DataFrame(data_dict)
+        # data_json = df_data.to_dict(orient="records")
+        stats_json = self.get_cmj_stats()
+        return json.dumps({"data": data_dict, "stats": stats_json})
 
 
 class ContinuedJumpModel(JumpModel):
     def __init__(self, combined_force_data: JumpData, left_force_data=None, right_force_data=None):
-        super().__init__()
+        super().__init__(combined_force_data, left_force_data=left_force_data, right_force_data=right_force_data)
         self._system_weight = None
         self.combined_force_data = combined_force_data
         self.left_force_data = left_force_data
@@ -297,22 +302,46 @@ class ContinuedJumpModel(JumpModel):
                 indexes_row[1] = min(it.index + 1500, max_index)
                 indexes.append(indexes_row)
                 indexes_row = [-1, -1]
-
         return indexes
 
-    @staticmethod
-    def divide_jump_data(indexes, jump_data: JumpData):
+    
+    def _get_jumps_data_arr(self, indexes, jump_data_type: JumpDataType, jump_data: JumpData):
         jump_data_arr = []
         for idx in indexes:
             start_idx = idx[0]
             end_idx = idx[1]
-            jump_data_arr.append(JumpData(JumpDataType.FORCE,
+            jump_data_arr.append(JumpData(jump_data_type,
                                           jump_data.time_arr[start_idx : end_idx],
                                           jump_data.value_arr[start_idx : end_idx],
                                           jump_data.value_col))
         return jump_data_arr
+    
+    def get_jumps_models_arr(self, indexes):
+        combined_force_data_arr = self._get_jumps_data_arr(indexes, JumpDataType.FORCE, self.combined_force_data)
+        left_force_data_arr = []
+        right_force_data_arr = []
+        if self.left_force_data is not None:
+            left_force_data_arr = self._get_jumps_data_arr(indexes, JumpDataType.FORCE, self.left_force_data)
+        if self.right_force_data is not None:
+            right_force_data_arr = self._get_jumps_data_arr(indexes, JumpDataType.FORCE, self.right_force_data)
+        
+        jump_models_arr = []
+        for it in itertools.zip_longest(combined_force_data_arr, left_force_data_arr, right_force_data_arr):
+            jump_models_arr.append(JumpModel(it[0], left_force_data=it[1], right_force_data=it[2]))
+        return jump_models_arr
 
 
+
+    def toJSON(self, force_threshold):
+        indexes = self.get_jumps_indexes(force_threshold)
+        jumps_models_arr = self.get_jumps_models_arr(indexes)
+        jumps_json_arr = []
+        for jump_model in jumps_models_arr:
+            jump_data_dict = jump_model.get_jump_data_dict()
+            jumps_json_arr.append(jump_data_dict)
+        return json.dumps(jumps_json_arr)
+
+        
 
 if __name__ == "__main__":
     force_path = r"D:\DevProjects\PythonProjects\athletes_dashboard\data\force\Adam_Lewandowski-10_14_2020.csv"
@@ -322,26 +351,12 @@ if __name__ == "__main__":
     # force_csv = HawkinJumpForceCSVReader(force_path)
     # vel_csv = HawkinJumpVelocityCSVReader(vel_path)
     # cmj_jump = CMJJumpModel(force_csv.combined_force, vel_csv.velocity, force_csv.left_force, force_csv.right_force)
-    # pp(cmj_jump.get_cmj_data_json())
+    # cmj_json = cmj_jump.toJSON()
 
     force_csj_csv = HawkinJumpForceCSVReader(csj_path)
     csj_jump = ContinuedJumpModel(force_csj_csv.combined_force)
-
-    idxs = csj_jump.get_jumps_indexes(100)
-    csj_arr = ContinuedJumpModel.divide_jump_data(idxs, csj_jump.combined_force_data)
-    for csj in csj_arr:
-        print(f"{csj.time_arr[0]} : {csj.time_arr[-1]}")
+    csj_json = csj_jump.toJSON(100)
     pass
-
-    # cmj_vel_attr = CMJAttribute(rf"{path}\robin\velocity.csv",
-    #                             {"time": "Time (s)", "velocity": "Velocity (M/s)"})
-    # cmj_force_attr = CMJAttribute(rf"{path}\robin\force.csv",
-    #                               {"time": "Time (s)", "left": "Left (N)", "right": "Right (N)",
-    #                                "combined": "Combined (N)"})
-    # cmj = CMJForceVelStats(cmj_vel_attr, cmj_force_attr, "Time (s)")
-    # print("Robin: ")
-    # cmj.get_cmj_stats()
-
 
 
 """

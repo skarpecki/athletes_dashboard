@@ -84,6 +84,8 @@ class JumpData:
         self._jump_data_type = jump_data_type
         self._time_arr = time_arr
         self._value_arr = value_arr
+        self.value_col = value_col
+        self.time_col = time_col
         self._items_count = None
         
     @property
@@ -298,6 +300,18 @@ class ContinuedJumpModel(JumpModel):
 
         return indexes
 
+    @staticmethod
+    def divide_jump_data(indexes, jump_data: JumpData):
+        jump_data_arr = []
+        for idx in indexes:
+            start_idx = idx[0]
+            end_idx = idx[1]
+            jump_data_arr.append(JumpData(JumpDataType.FORCE,
+                                          jump_data.time_arr[start_idx : end_idx],
+                                          jump_data.value_arr[start_idx : end_idx],
+                                          jump_data.value_col))
+        return jump_data_arr
+
 
 
 if __name__ == "__main__":
@@ -313,8 +327,11 @@ if __name__ == "__main__":
     force_csj_csv = HawkinJumpForceCSVReader(csj_path)
     csj_jump = ContinuedJumpModel(force_csj_csv.combined_force)
 
-    pp(len(csj_jump.get_jumps_indexes()))
-
+    idxs = csj_jump.get_jumps_indexes(100)
+    csj_arr = ContinuedJumpModel.divide_jump_data(idxs, csj_jump.combined_force_data)
+    for csj in csj_arr:
+        print(f"{csj.time_arr[0]} : {csj.time_arr[-1]}")
+    pass
 
     # cmj_vel_attr = CMJAttribute(rf"{path}\robin\velocity.csv",
     #                             {"time": "Time (s)", "velocity": "Velocity (M/s)"})

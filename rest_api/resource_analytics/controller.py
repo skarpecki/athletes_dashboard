@@ -18,3 +18,17 @@ def analytics_cmj():
             resp = make_response({"message": str(err)}, 500)
             resp.headers["Content-Type"] = "application/json"
             return resp
+
+@analytics_bp.route("/cj/", methods=["GET", "POST"])
+def analytics_cj():
+    if request.method == "POST":
+        try:
+            forceFile = request.files.get("forceFile")
+            data = AnalyticsService.get_cj_values(forceFile)
+            resp = make_response(data, 200)
+            resp.headers["Content-Type"] = "application/json"
+            return resp
+        except Exception as err:
+            resp = make_response({"message": str(err)}, 500)
+            resp.headers["Content-Type"] = "application/json"
+            return resp

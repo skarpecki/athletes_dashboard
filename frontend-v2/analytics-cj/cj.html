@@ -4,14 +4,23 @@
 <head>
   <meta charset="utf-8">
   <title>Athletes dashboard</title>
+  
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,700&display=swap" />
-  <link rel="stylesheet" href="style.css" />
-  <script src="script.js"></script>
+  <link rel="stylesheet" href="cj.css" />
+  <link rel="stylesheet" href="../style.css" />
+  
+  
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hammer.js/2.0.8/hammer.min.js" integrity="sha512-UXumZrZNiOwnTcZSHLOfcTs0aos2MzBWHXOHOuB0J/R44QB0dwY5JgfbvljXcklVf65Gc4El6RjZ+lnwd2az2g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-zoom/1.2.0/chartjs-plugin-zoom.min.js" integrity="sha512-TT0wAMqqtjXVzpc48sI0G84rBP+oTkBZPgeRYIOVRGUdwJsyS3WPipsNh///ay2LJ+onCM23tipnz6EvEy2/UA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  
+  <script src="cj.js"></script>
+
 </head>
 
 <body>
   <nav class="navbar">
-    <a href="#" class="logo">
+    <a href="../index.html" class="logo">
       <span class="link-text logo-text">Dashboard</span>
       <svg aria-hidden="true" focusable="false" data-prefix="fad" data-icon="angle-double-right" role="img"
         xmlns="http://www.w3.org/2000/svg" viewbox="0 0 448 512">
@@ -56,10 +65,10 @@
         </a>
         <ul class="navbar-nav-menu" style="display: none;" onclick="">
           <li class="navbar-nav-menu-item">
-            <a href="converter/cmj.html" class="nav-link">CMJ</a>
+            <a href="../analytics-cmj/cmj.html" class="nav-link">CMJ</a>
           </li>
           <li class="navbar-nav-menu-item">
-            <a href="analytics-cj/cj.html" class="nav-link">Continued Jump</a>
+            <a href="#" class="nav-link">Continued Jump</a>
           </li>
         </ul>
       </li>
@@ -123,18 +132,60 @@
       </li>
     </ul>
   </nav>
-
   <main>
     <header class="header">
+      <span>
+        <h2>CMJ Results</h2>
+      </span>
       <div class="header-controls">
-        <div class="main-nav-toggle">
+        <div class="upload-buttons">
+
+          <input type="file" name="forceFile" id="forceFile" class="inputfile" title="force file"/>
+          <label for="forceFile" class="inputfileLabel">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="17" viewbox="0 0 20 17">
+              <path
+                d="M10 0l-5.2 4.9h3.3v5.1h3.8v-5.1h3.3l-5.2-4.9zm9.3 11.5l-3.2-2.1h-2l3.4 2.6h-3.5c-.1 0-.2.1-.2.1l-.8 2.3h-6l-.8-2.2c-.1-.1-.1-.2-.2-.2h-3.6l3.4-2.6h-2l-3.2 2.1c-.4.3-.7 1-.6 1.5l.6 3.1c.1.5.7.9 1.2.9h16.3c.6 0 1.1-.4 1.3-.9l.6-3.1c.1-.5-.2-1.2-.7-1.5z">
+              </path>
+            </svg>
+            <span>Choose a force file...</span>
+          </label>
+
+          <input type="file" name="velocityFile" id="velocityFile" class="inputfile" title="velocity file"/>
+          <label for="velocityFile" class="inputfileLabel">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="17" viewbox="0 0 20 17">
+              <path
+                d="M10 0l-5.2 4.9h3.3v5.1h3.8v-5.1h3.3l-5.2-4.9zm9.3 11.5l-3.2-2.1h-2l3.4 2.6h-3.5c-.1 0-.2.1-.2.1l-.8 2.3h-6l-.8-2.2c-.1-.1-.1-.2-.2-.2h-3.6l3.4-2.6h-2l-3.2 2.1c-.4.3-.7 1-.6 1.5l.6 3.1c.1.5.7.9 1.2.9h16.3c.6 0 1.1-.4 1.3-.9l.6-3.1c.1-.5-.2-1.2-.7-1.5z">
+              </path>
+            </svg>
+            <span>Choose a velocity file...</span>
+          </label>
+  
         </div>
+        <button id="uploadFiles">
+          Upload
+        </button>
       </div>
+
     </header>
-
-    <body>
-
-    </body>
+    <div class="cmj-dashboard-content">
+      <h1>Plot</h1>
+      <div class="plot">
+        <div class="select-chart-type">
+          <button type="button" class="select-chart-type-btn" value="force">Force</button>
+          <button type="button" class="select-chart-type-btn" value="vel">Velocity</button>
+          <button type="button" class="select-chart-type-btn" value="acc">Acceleration</button>
+        </div>
+        <button id="resetZoomBtn" type="button">Reset</button>
+        <canvas id="myChart"></canvas>
+      </div>       
+      <h1>Metrics</h1>
+      <table class="cmjTable" id="cmjTable">
+        <tr>
+          <th>Attribute</th>
+          <th>Value</th>
+        </tr>
+      </table>
+    </div>
   </main>
 </body>
 

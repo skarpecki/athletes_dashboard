@@ -27,6 +27,12 @@ class AnalyticsService:
         vel_csv = HawkinJumpVelocityCSVReader(vel_csv_file)
         cmj_jump = CMJJumpModel(force_csv.combined_force, vel_csv.velocity, force_csv.left_force, force_csv.right_force)
         return cmj_jump.toJSON()
+    
+    @staticmethod
+    def get_cj_values(force_csv_file):
+        force_csv = HawkinJumpForceCSVReader(force_csv_file)
+        csj_jump = ContinuedJumpModel(force_csv.combined_force, force_csv.left_force, force_csv.right_force)
+        return csj_jump.toJSON(100)
 
 class SystemWeight:
     def __init__(self, weight, weight_std):
@@ -338,7 +344,7 @@ class ContinuedJumpModel(JumpModel):
         jumps_json_arr = []
         for jump_model in jumps_models_arr:
             jump_data_dict = jump_model.get_jump_data_dict()
-            jumps_json_arr.append(jump_data_dict)
+            jumps_json_arr.append({"data": jump_data_dict, "stats": {}})
         return json.dumps(jumps_json_arr)
 
         

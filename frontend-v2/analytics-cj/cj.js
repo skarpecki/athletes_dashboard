@@ -1,4 +1,5 @@
 var cmjData;
+var jumpIterator;
 
 var getLabel = (labels, idFor) => {
     for (let i = 0; i < labels.length; i++) {
@@ -124,7 +125,12 @@ var generateChartConfig = (data) => {
             scales: {
                 x: {
                     type: 'linear',
+                    position: 'bottom'
+                },
+                y: {
+                    max: 10000
                 }
+               
             },
             plugins: {
                 zoom: {
@@ -210,6 +216,7 @@ window.onload = () => {
     }
 
     document.querySelector("#uploadFiles").onclick = () => {
+        jumpIterator = 0;
         document.body.style.cursor='wait';
         
         const cmjTable = document.querySelector("#cmjTable");
@@ -225,11 +232,12 @@ window.onload = () => {
                 document.body.style.cursor='default';
             }
             const data = JSON.parse(event.target.responseText);
-            const stats = data["stats"];
-            cmjData = data["data"];
-            fillCMJTable(cmjTable, stats);
+            console.log(event.target.responseText)
+            const stats = data[jumpIterator]["stats"];
+            cmjData = data;
+            // fillCMJTable(cmjTable, stats);
             myScatter = new Chart(ctx, 
-                generateChartConfig(generateChartForceData(cmjData))
+                generateChartConfig(generateChartForceData(cmjData[jumpIterator]["data"]))
                 );
             showPlotElements();
             document.body.style.cursor='default';
@@ -240,7 +248,7 @@ window.onload = () => {
             alert(event.target.responseText);
             document.body.style.cursor='default';
         });
-        XHR.open("POST", "http://127.0.0.1:5000/analytics/cmj/");
+        XHR.open("POST", "http://127.0.0.1:5000/analytics/cj/");
         XHR.send(formData);
     }
 
@@ -248,32 +256,26 @@ window.onload = () => {
 
     for(let i = 0; i < chartTypeBtns.length; i++) {
 
-        if(chartTypeBtns[i].value == "vel") {
-            chartTypeBtns[i].onclick = () => {
-                colorTypeButtons(chartTypeBtns, i);
-                data = generateChartVelocityData(cmjData);
-                config = generateChartConfig(data);
-                myScatter.destroy();
-                myScatter = new Chart(ctx, config);
-                plotDiv.scrollIntoView();
-            }
-        };
 
         if(chartTypeBtns[i].value == "force") {
             chartTypeBtns[i].onclick = () => {
-                colorTypeButtons(chartTypeBtns, i);
-                data = generateChartForceData(cmjData);
+                jumpIterator = jumpIterator - 1;
+                console.log(jumpIterator);
+                data = generateChartForceData(cmjData[jumpIterator]["data"]);
+                console.log(jumpIterator);
                 config = generateChartConfig(data);
                 myScatter.destroy();
                 myScatter = new Chart(ctx, config);
+                console.log(config)
                 plotDiv.scrollIntoView();
             }
         };
 
         if(chartTypeBtns[i].value == "acc") {
             chartTypeBtns[i].onclick = () => {
-                colorTypeButtons(chartTypeBtns, i);
-                data = generateChartAccelerationData(cmjData);
+                jumpIterator = jumpIterator + 1 
+                data = generateChartForceData(cmjData[jumpIterator]["data"]);
+                console.log(jumpIterator);
                 config = generateChartConfig(data);
                 myScatter.destroy();
                 myScatter = new Chart(ctx, config);

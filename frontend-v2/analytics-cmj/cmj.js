@@ -23,55 +23,61 @@ var fillMetricsTable = (table, json) => {
         let valueCell = newRow.insertCell(2);
         let boldValue = document.createElement("strong");
 
-        let athleteTextValue = (athleteName === "") ? ("Athlete " + uploadIteration) : athleteName; 
+        let athleteTextValue = (athleteName === "") ? ("Athlete " + uploadIteration) : athleteName;
         let athleteText = document.createTextNode(athleteTextValue);
         let keyText = document.createTextNode(key);
         let valueText = document.createTextNode(json[key]);
-        
+
         athleteCell.appendChild(athleteText);
         keyCell.appendChild(keyText);
         boldValue.appendChild(valueText);
         valueCell.appendChild(boldValue);
     }
 
-    for(let i = 1; i < table.rows.length; i++) {
+    for (let i = 1; i < table.rows.length; i++) {
         table.rows[i].onmouseover = () => {
-            if(i <= statsCount) {
-                for(let z = 0; z < uploadIteration; z++) {
-                    let tds = table.rows[i + statsCount * z].querySelectorAll("td");
-                    for(let j = 0, td; td = tds[j]; j++) {
-                        td.style.backgroundColor = "#B2FFB2";
-                    }  
+            /* uploadIteration - Math.floor(i / statsCount) for 3 uploads
+             * 0 < x <= statsCount => 3
+             * statsCount < x <= statsCount * 2 => 2
+             * statsCount * 2 < x <= statsCount * 3 => 1 
+            */ 
+
+            //forward highlight
+            for (let z = 0; z < uploadIteration - Math.floor(i / statsCount); z++) {
+                let tds = table.rows[i + statsCount * z].querySelectorAll("td");
+                for (let j = 0, td; td = tds[j]; j++) {
+                    td.style.backgroundColor = "#B2FFB2";
                 }
             }
-            if(i >= statsCount) {
-                for(let z = 0; z < uploadIteration; z++) {
-                    let tds = table.rows[i - statsCount * z].querySelectorAll("td");
-                    for(let j = 0, td; td = tds[j]; j++) {
-                        td.style.backgroundColor = "#B2FFB2";
-                    }  
+            
+            //backward highlight
+            for (let z = 0; z <= Math.floor(i / statsCount); z++) {
+                let tds = table.rows[i - statsCount * z].querySelectorAll("td");
+                for (let j = 0, td; td = tds[j]; j++) {
+                    td.style.backgroundColor = "#B2FFB2";
                 }
             }
         }
         table.rows[i].onmouseout = () => {
-            if (i <= statsCount) {
-                for(let z = 0; z < uploadIteration; z++) {
-                    let tds = table.rows[i + statsCount * z].querySelectorAll("td");
-                    for(let j = 0, td; td = tds[j]; j++) {
-                        td.style.backgroundColor = "white";
-                    }  
-                } 
+            
+            //backward highlight
+            for (let z = 0; z < uploadIteration - Math.floor(i / statsCount); z++) {
+                let tds = table.rows[i + statsCount * z].querySelectorAll("td");
+                for (let j = 0, td; td = tds[j]; j++) {
+                    td.style.backgroundColor = "white";
+                }
             }
-            if(i >= statsCount) {    
-                for(let z = 0; z < uploadIteration; z++) {
-                    let tds = table.rows[i - statsCount * z].querySelectorAll("td");
-                    for(let j = 0, td; td = tds[j]; j++) {
-                        td.style.backgroundColor = "white";
-                    }  
-                } 
+
+            //forward highlight
+            for (let z = 0; z <= Math.floor(i / statsCount); z++) {
+                let tds = table.rows[i - statsCount * z].querySelectorAll("td");
+                for (let j = 0, td; td = tds[j]; j++) {
+                    td.style.backgroundColor = "white";
+                }
             }
+
         }
-        
+
     }
 }
 
@@ -134,7 +140,7 @@ var generateChartForceData = (jsonCMJ) => {
 
 var generateChartVelocityData = (jsonCMJ) => {
     const combinedForceData = getCMJPlotData(jsonCMJ, "Time (s)", "Velocity (m/s)");
-    
+
     const data = {
         datasets: [{
             label: 'Velocity (m/s)',
@@ -208,11 +214,11 @@ var generateChartConfig = (data) => {
 
 
 var colorTypeButtons = (allButons, btnToGreyIdx) => {
-    for(let i = 0; i < allButons.length; i++) {
+    for (let i = 0; i < allButons.length; i++) {
         if (i === btnToGreyIdx) {
             allButons[i].style.backgroundColor = "#b8b3b3";
         } else {
-            allButons[i].style.backgroundColor =  "";
+            allButons[i].style.backgroundColor = "";
         }
     }
 }
@@ -223,7 +229,7 @@ window.onload = () => {
     var plotDiv = document.querySelector(".plot")
     var ctx = null;
     var myScatter = null;
-    if(document.getElementById('myChart') !== null) {
+    if (document.getElementById('myChart') !== null) {
         ctx = document.getElementById('myChart').getContext('2d');
     }
 
@@ -268,8 +274,8 @@ window.onload = () => {
     }
 
     document.querySelector("#uploadFiles").onclick = () => {
-        document.body.style.cursor='wait';
-        
+        document.body.style.cursor = 'wait';
+
         const metricsTable = document.querySelector("#metricsTable");
         const forceCSV = forceFile.files[0];
         const velCSV = velocityFile.files[0];
@@ -280,7 +286,7 @@ window.onload = () => {
         XHR.addEventListener("load", event => {
             if (XHR.status != 200) {
                 alert(event.target.responseText);
-                document.body.style.cursor='default';
+                document.body.style.cursor = 'default';
             }
             athleteName = document.querySelector("#athleteNameText").value;
             uploadIteration += 1;
@@ -288,20 +294,20 @@ window.onload = () => {
             const stats = data["stats"];
             cmjData = data["data"];
             fillMetricsTable(metricsTable, stats);
-            if(myScatter !== null) {
+            if (myScatter !== null) {
                 myScatter.destroy();
             }
-            myScatter = new Chart(ctx, 
+            myScatter = new Chart(ctx,
                 generateChartConfig(generateChartForceData(cmjData))
-                );
+            );
             showPlotElements();
-            document.body.style.cursor='default';
+            document.body.style.cursor = 'default';
             plotDiv.scrollIntoView();
         });
         XHR.addEventListener("error", event => {
             console.log("error");
             alert(event.target.responseText);
-            document.body.style.cursor='default';
+            document.body.style.cursor = 'default';
         });
         XHR.open("POST", "http://127.0.0.1:5000/analytics/cmj/");
         XHR.send(formData);
@@ -309,15 +315,15 @@ window.onload = () => {
 
     let chartTypeBtns = document.querySelectorAll(".select-chart-type-btn");
 
-    for(let i = 0; i < chartTypeBtns.length; i++) {
+    for (let i = 0; i < chartTypeBtns.length; i++) {
 
-        if(chartTypeBtns[i].value == "vel") {
+        if (chartTypeBtns[i].value == "vel") {
             chartTypeBtns[i].onclick = () => {
                 currentDataType = "Velocity";
                 colorTypeButtons(chartTypeBtns, i);
                 data = generateChartVelocityData(cmjData);
                 config = generateChartConfig(data);
-                if(myScatter !== null) {
+                if (myScatter !== null) {
                     myScatter.destroy();
                 }
                 myScatter = new Chart(ctx, config);
@@ -325,13 +331,13 @@ window.onload = () => {
             }
         };
 
-        if(chartTypeBtns[i].value == "force") {
+        if (chartTypeBtns[i].value == "force") {
             chartTypeBtns[i].onclick = () => {
                 currentDataType = "Force";
                 colorTypeButtons(chartTypeBtns, i);
                 data = generateChartForceData(cmjData);
                 config = generateChartConfig(data);
-                if(myScatter !== null) {
+                if (myScatter !== null) {
                     myScatter.destroy();
                 }
                 myScatter = new Chart(ctx, config);
@@ -339,22 +345,22 @@ window.onload = () => {
             }
         };
 
-        if(chartTypeBtns[i].value == "acc") {
+        if (chartTypeBtns[i].value == "acc") {
             chartTypeBtns[i].onclick = () => {
                 currentDataType = "Acceleration";
                 colorTypeButtons(chartTypeBtns, i);
                 data = generateChartAccelerationData(cmjData);
                 config = generateChartConfig(data);
-                if(myScatter !== null) {
+                if (myScatter !== null) {
                     myScatter.destroy();
                 }
                 myScatter = new Chart(ctx, config);
                 plotDiv.scrollIntoView();
             }
         };
-            
-    } 
-    
+
+    }
+
     document.querySelector("#resetZoomBtn").onclick = () => {
         myScatter.resetZoom();
     }

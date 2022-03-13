@@ -254,15 +254,15 @@ class CMJJumpModel(JumpModel):
         # negative phase - ind_unwght_start to ind_brk_end
         # positive phase ind_brk_start to ind_prop_end
 
-        stats = {'v_peak_prop': self.vel_data.value_arr[ind_prop_start : ind_prop_end].max(),
-                 'v_peak_neg': self.vel_data.value_arr[ind_unwght_start : ind_brk_end].min(),
-                 'v_avg_neg': self.vel_data.value_arr[ind_unwght_start : ind_brk_end].mean(),
-                 't_to_v_peak_prop': self.vel_data.time_arr[v_peak_prop_idx] - self.vel_data.time_arr[ind_prop_start],
-                 'v_avg_100_prop': self.vel_data.value_arr[ind_prop_start: ind_prop_start + 100].mean(),
-                 'a_avg_100_prop': self.acc_data.value_arr[ind_prop_start: ind_prop_start + 100].mean(),
-                 'a_peak_100_prop': self.acc_data.value_arr[ind_prop_start: ind_prop_start + 100].max(),
-                 'v_peak_100_prop': self.vel_data.value_arr[ind_prop_start: ind_prop_start + 100].max(),
-                 'a_peak_pos': self.acc_data.value_arr[ind_brk_start: ind_prop_end].max()
+        stats = {'Peak prop. velocity [m/s]': self.vel_data.value_arr[ind_prop_start : ind_prop_end].max(),
+                 'Peak neg. velocity [m/s]': self.vel_data.value_arr[ind_unwght_start : ind_brk_end].min(),
+                 'Avg. neg. velocity [m/s]': self.vel_data.value_arr[ind_unwght_start : ind_brk_end].mean(),
+                 'Peak prop. acc. [m/s^2]': self.acc_data.value_arr[ind_brk_start: ind_prop_end].max(),
+                 'Time to peak prop. vel [s]': self.vel_data.time_arr[v_peak_prop_idx] - self.vel_data.time_arr[ind_prop_start],
+                 '100ms prop. avg. vel. [m/s]': self.vel_data.value_arr[ind_prop_start: ind_prop_start + 100].mean(),
+                 '100ms prop. avg. acc. [m/s^2]': self.acc_data.value_arr[ind_prop_start: ind_prop_start + 100].mean(),
+                 '100ms prop. peak acc. [m/s^2]': self.acc_data.value_arr[ind_prop_start: ind_prop_start + 100].max(),
+                 '100ms prop. peak vel. [m/s]': self.vel_data.value_arr[ind_prop_start: ind_prop_start + 100].max(),
         }
 
         return stats

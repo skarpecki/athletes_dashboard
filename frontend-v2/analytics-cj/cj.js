@@ -104,7 +104,10 @@ var generateChartConfig = (data) => {
             plugins: {
                 title: {
                     display: true,
-                    text: "Jump no. " + (jumpIterator + 1)
+                    text: "Jump no. " + (jumpIterator + 1),
+                    font: {
+                        size: 30,
+                    }
                 },
                 zoom: {
                     zoom: {

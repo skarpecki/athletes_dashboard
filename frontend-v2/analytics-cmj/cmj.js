@@ -1,4 +1,5 @@
 var cmjData;
+var currentDataType = "Force";
 
 var getLabel = (labels, idFor) => {
     for (let i = 0; i < labels.length; i++) {
@@ -117,16 +118,19 @@ var generateChartConfig = (data) => {
         type: 'scatter',
         data: data,
         options: {
-            title: {
-                display: true,
-                text: "CMJ(s)"
-            },
             scales: {
                 x: {
                     type: 'linear',
                 }
             },
             plugins: {
+                title: {
+                    display: true,
+                    text: currentDataType,
+                    font: {
+                        size: 30,
+                    }
+                },
                 zoom: {
                     zoom: {
                         wheel: {
@@ -228,6 +232,9 @@ window.onload = () => {
             const stats = data["stats"];
             cmjData = data["data"];
             fillCMJTable(cmjTable, stats);
+            if(myScatter !== null) {
+                myScatter.destroy();
+            }
             myScatter = new Chart(ctx, 
                 generateChartConfig(generateChartForceData(cmjData))
                 );
@@ -250,6 +257,7 @@ window.onload = () => {
 
         if(chartTypeBtns[i].value == "vel") {
             chartTypeBtns[i].onclick = () => {
+                currentDataType = "Velocity";
                 colorTypeButtons(chartTypeBtns, i);
                 data = generateChartVelocityData(cmjData);
                 config = generateChartConfig(data);
@@ -261,6 +269,7 @@ window.onload = () => {
 
         if(chartTypeBtns[i].value == "force") {
             chartTypeBtns[i].onclick = () => {
+                currentDataType = "Force";
                 colorTypeButtons(chartTypeBtns, i);
                 data = generateChartForceData(cmjData);
                 config = generateChartConfig(data);
@@ -272,6 +281,7 @@ window.onload = () => {
 
         if(chartTypeBtns[i].value == "acc") {
             chartTypeBtns[i].onclick = () => {
+                currentDataType = "Acceleration";
                 colorTypeButtons(chartTypeBtns, i);
                 data = generateChartAccelerationData(cmjData);
                 config = generateChartConfig(data);

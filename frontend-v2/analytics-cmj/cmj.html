@@ -81,7 +81,6 @@
       </span>
       <div class="header-controls">
         <div class="upload-buttons">
-
           <input type="file" name="forceFile" id="forceFile" class="inputfile" title="force file"/>
           <label for="forceFile" class="inputfileLabel">
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="17" viewbox="0 0 20 17">
@@ -91,7 +90,6 @@
             </svg>
             <span>Choose a force file...</span>
           </label>
-
           <input type="file" name="velocityFile" id="velocityFile" class="inputfile" title="velocity file"/>
           <label for="velocityFile" class="inputfileLabel">
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="17" viewbox="0 0 20 17">
@@ -101,7 +99,10 @@
             </svg>
             <span>Choose a velocity file...</span>
           </label>
-  
+        </div>
+        <div class="athlete-name">
+          <label for="athleteNameLabel" id="athleteNameLabel">Athlete name</label>
+          <input type="text" name="athleteNameText" id="athleteNameText">
         </div>
         <button id="uploadFiles">
           Upload
@@ -123,6 +124,7 @@
       <h1>Metrics</h1>
       <table class="cmjTable" id="cmjTable">
         <tr>
+          <th>Athlete</th>
           <th>Attribute</th>
           <th>Value</th>
         </tr>

@@ -2,6 +2,8 @@ var cmjData;
 var currentDataType = "Force";
 var xMin = 0;
 var xMax = 0;
+var uploadIteration = 0;
+var athleteName = "";
 
 var getLabel = (labels, idFor) => {
     for (let i = 0; i < labels.length; i++) {
@@ -11,16 +13,22 @@ var getLabel = (labels, idFor) => {
     }
 }
 
-var fillCMJTable = (table, json) => {
+var fillMetricsTable = (table, json) => {
     for (let key in json) {
         let newRow = table.insertRow(-1);
-        let keyCell = newRow.insertCell(0);
-        let valueCell = newRow.insertCell(1);
+        let athleteCell = newRow.insertCell(0);
+        let keyCell = newRow.insertCell(1);
+        let valueCell = newRow.insertCell(2);
         let boldValue = document.createElement("strong");
+
+        let athleteTextValue = (athleteName === "") ? ("Athlete " + uploadIteration) : athleteName; 
+        let athleteText = document.createTextNode(athleteTextValue);
         let keyText = document.createTextNode(key);
         let valueText = document.createTextNode(json[key]);
-        boldValue.appendChild(valueText);
+        
+        athleteCell.appendChild(athleteText);
         keyCell.appendChild(keyText);
+        boldValue.appendChild(valueText);
         valueCell.appendChild(boldValue);
     }
 }
@@ -232,10 +240,12 @@ window.onload = () => {
                 alert(event.target.responseText);
                 document.body.style.cursor='default';
             }
+            athleteName = document.querySelector("#athleteNameText").value;
+            uploadIteration += 1;
             const data = JSON.parse(event.target.responseText);
             const stats = data["stats"];
             cmjData = data["data"];
-            fillCMJTable(cmjTable, stats);
+            fillMetricsTable(cmjTable, stats);
             if(myScatter !== null) {
                 myScatter.destroy();
             }

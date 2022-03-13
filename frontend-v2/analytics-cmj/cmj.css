@@ -17,6 +17,19 @@
     text-overflow: ellipsis;
 }
 
+
+.header-controls {
+    display: flex;
+    flex-direction: row;
+}
+
+.athlete-name {
+    margin-left: 1rem;
+    display: flex;
+    flex-direction: column;
+}
+
+
 .inputfile {
     width: 0.1px;
     height: 0.1px;
@@ -58,6 +71,26 @@
     background-color: limegreen;
 }
 
+.athlete-name {
+    margin: 1rem;
+    background-color: var(--bg-body);
+    border: black solid 1px;
+    padding: 0 0.5rem;
+}
+
+#athleteNameLabel {
+    font-size: 1.1rem;  
+    font-weight: 700;
+    color: black;
+    margin-top: 0.1rem;
+}
+
+#athleteNameText {
+    margin-top: 0.1rem;
+    font-size: 1rem;
+    font-weight: 600;
+    padding: 0.3rem;
+}
 
 .cmjTable, .cmjTable table, .cmjTable th, .cmjTable td {
     table-layout: fixed;
@@ -84,8 +117,6 @@
 .cmjTable th:hover {
     background-color: #B2FFB2;
 }
-
-
 
 #resetZoomBtn {
     font-size: 1.0rem;

@@ -1,5 +1,8 @@
 var cmjData;
 var jumpIterator;
+var jumpsMaxIdx;
+var jumpsMaxForce = 0;
+
 
 var getLabel = (labels, idFor) => {
     for (let i = 0; i < labels.length; i++) {
@@ -9,7 +12,7 @@ var getLabel = (labels, idFor) => {
     }
 }
 
-var fillCMJTable = (table, json) => {
+var fillmetricsTable = (table, json) => {
     for (let key in json) {
         let newRow = table.insertRow(-1);
         let keyCell = newRow.insertCell(0);
@@ -24,7 +27,7 @@ var fillCMJTable = (table, json) => {
 }
 
 var showPlotElements = () => {
-    document.querySelector(".select-chart-type").style.display = "block";
+    document.querySelector(".navigate-jumps").style.display = "block";
     document.querySelector("#resetZoomBtn").style.display = "block";
     document.querySelector("#myChart").style.background = "white";
 }
@@ -63,76 +66,46 @@ var generateChartForceData = (jsonCMJ) => {
     return data
 }
 
-
-
 var getCMJPlotData = (json, xCol, yCol) => {
     let data = [];
     let xArr = json[xCol]
     let yArr = json[yCol]
-
+    let tempJumpsMaxForce = yArr[0];
     for (let i = 0; i < xArr.length; i++) {
         data.push({
             x: xArr[i],
             y: yArr[i]
         })
+        tempJumpsMaxForce = Math.max(yArr[i], tempJumpsMaxForce);
+    }
+    if (tempJumpsMaxForce > jumpsMaxForce) {
+        jumpsMaxForce = Math.round((tempJumpsMaxForce + 1000) / 1000) * 1000;
     }
     return data;
 }
 
-var generateChartVelocityData = (jsonCMJ) => {
-    const combinedForceData = getCMJPlotData(jsonCMJ, "Time (s)", "Velocity (m/s)");
-
-    const data = {
-        datasets: [{
-            label: 'Velocity (m/s)',
-            data: combinedForceData,
-            backgroundColor: 'rgb(255, 99, 132)',
-            showLine: true,
-            borderColor: 'rgb(255, 99, 132)',
-            pointRadius: 0
-        }],
-    };
-
-    return data
-}
-
-var generateChartAccelerationData = (jsonCMJ) => {
-    const combinedForceData = getCMJPlotData(jsonCMJ, "Time (s)", "Acceleration (m/s^2)");
-
-    const data = {
-        datasets: [{
-            label: 'Acceleration (m/s^2)',
-            data: combinedForceData,
-            backgroundColor: 'rgb(255, 99, 132)',
-            showLine: true,
-            borderColor: 'rgb(255, 99, 132)',
-            pointRadius: 0
-        }],
-    };
-
-    return data
-}
 
 var generateChartConfig = (data) => {
     return {
         type: 'scatter',
         data: data,
         options: {
-            title: {
-                display: true,
-                text: "CMJ(s)"
-            },
             scales: {
                 x: {
                     type: 'linear',
                     position: 'bottom'
                 },
                 y: {
-                    max: 10000
+                    max: jumpsMaxForce,
+                    min: 0
                 }
                
             },
             plugins: {
+                title: {
+                    display: true,
+                    text: "Jump no. " + (jumpIterator + 1)
+                },
                 zoom: {
                     zoom: {
                         wheel: {
@@ -189,18 +162,7 @@ window.onload = () => {
         document.querySelector(".navbar-nav-menu").style.display = "none";
     }
 
-    const velocityFile = document.querySelector("#velocityFile")
     const labels = document.querySelectorAll("label");
-    velocityFile.onchange = (event) => {
-        const label = getLabel(labels, velocityFile.id);
-        const span = label.querySelector("span");
-        if (event.target.files.length == 0) {
-            span.innerHTML = "Choose a velocity file..."
-        } else {
-            const file = event.target.files[0];
-            span.innerHTML = file.name;
-        }
-    }
 
     const forceFile = document.querySelector("#forceFile")
     forceFile.onchange = (event) => {
@@ -219,23 +181,26 @@ window.onload = () => {
         jumpIterator = 0;
         document.body.style.cursor='wait';
         
-        const cmjTable = document.querySelector("#cmjTable");
+        const metricsTable = document.querySelector("#metricsTable");
         const forceCSV = forceFile.files[0];
-        const velCSV = velocityFile.files[0];
         let formData = new FormData();
         formData.append("forceFile", forceCSV);
-        formData.append("velocityFile", velCSV);
         const XHR = new XMLHttpRequest();
         XHR.addEventListener("load", event => {
             if (XHR.status != 200) {
-                alert(event.target.responseText);
                 document.body.style.cursor='default';
+                alert(event.target.responseText);
             }
             const data = JSON.parse(event.target.responseText);
-            console.log(event.target.responseText)
+            jumpsMaxIdx = data.length - 1;
+            jumpIterator = 0;
             const stats = data[jumpIterator]["stats"];
+            // fillmetricsTable(metricsTable, stats);
             cmjData = data;
-            // fillCMJTable(cmjTable, stats);
+            if(myScatter !== null) {
+                myScatter.destroy();
+                jumpsMaxForce = 0;
+            }
             myScatter = new Chart(ctx, 
                 generateChartConfig(generateChartForceData(cmjData[jumpIterator]["data"]))
                 );
@@ -252,38 +217,52 @@ window.onload = () => {
         XHR.send(formData);
     }
 
-    let chartTypeBtns = document.querySelectorAll(".select-chart-type-btn");
+    let chartTypeBtns = document.querySelectorAll(".navigate-jumps-btn");
+    function moveLeft() {
+        jumpIterator = ( jumpIterator == 0 ) ? jumpsMaxIdx : jumpIterator - 1;
+        let data = generateChartForceData(cmjData[jumpIterator]["data"]);
+        config = generateChartConfig(data);
+        myScatter.destroy();
+        myScatter = new Chart(ctx, config);
+        plotDiv.scrollIntoView();
+    }
+
+    function moveRight() {
+        jumpIterator = ( jumpIterator == jumpsMaxIdx ) ? 0 : jumpIterator + 1; 
+        let data = generateChartForceData(cmjData[jumpIterator]["data"]);
+        config = generateChartConfig(data);
+        myScatter.destroy();
+        myScatter = new Chart(ctx, config);
+        plotDiv.scrollIntoView();
+    }
+
+    
+    document.addEventListener('keydown', (event) => {
+        if(!event.repeat)
+        {
+            switch (event.key) {
+                case "ArrowLeft":
+                    moveLeft();
+                    break;
+                case "ArrowRight":
+                    moveRight();
+                    break;
+            }
+        }
+    })
+
 
     for(let i = 0; i < chartTypeBtns.length; i++) {
 
-
-        if(chartTypeBtns[i].value == "force") {
-            chartTypeBtns[i].onclick = () => {
-                jumpIterator = jumpIterator - 1;
-                console.log(jumpIterator);
-                data = generateChartForceData(cmjData[jumpIterator]["data"]);
-                console.log(jumpIterator);
-                config = generateChartConfig(data);
-                myScatter.destroy();
-                myScatter = new Chart(ctx, config);
-                console.log(config)
-                plotDiv.scrollIntoView();
-            }
+        if(chartTypeBtns[i].value == "left") {
+            chartTypeBtns[i].onclick = moveLeft;
         };
 
-        if(chartTypeBtns[i].value == "acc") {
-            chartTypeBtns[i].onclick = () => {
-                jumpIterator = jumpIterator + 1 
-                data = generateChartForceData(cmjData[jumpIterator]["data"]);
-                console.log(jumpIterator);
-                config = generateChartConfig(data);
-                myScatter.destroy();
-                myScatter = new Chart(ctx, config);
-                plotDiv.scrollIntoView();
-            }
-        };
-            
+        if(chartTypeBtns[i].value == "right") {
+            chartTypeBtns[i].onclick = moveRight;
+        };        
     } 
+
     
     document.querySelector("#resetZoomBtn").onclick = () => {
         console.log("click");

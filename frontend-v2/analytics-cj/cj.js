@@ -18,13 +18,18 @@ var getLabel = (labels, idFor) => {
 var fillmetricsTable = (table, json) => {
     for (let key in json) {
         let newRow = table.insertRow(-1);
-        let keyCell = newRow.insertCell(0);
-        let valueCell = newRow.insertCell(1);
+        let athleteCell = newRow.insertCell(0);
+        let keyCell = newRow.insertCell(1);
+        let valueCell = newRow.insertCell(2);
         let boldValue = document.createElement("strong");
+
+        let athleteText = document.createTextNode("Athlete " + uploadIteration);
         let keyText = document.createTextNode(key);
         let valueText = document.createTextNode(json[key]);
-        boldValue.appendChild(valueText);
+        
+        athleteCell.appendChild(athleteText);
         keyCell.appendChild(keyText);
+        boldValue.appendChild(valueText);
         valueCell.appendChild(boldValue);
     }
 }

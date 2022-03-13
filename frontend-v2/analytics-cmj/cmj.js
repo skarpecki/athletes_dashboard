@@ -4,6 +4,7 @@ var xMin = 0;
 var xMax = 0;
 var uploadIteration = 0;
 var athleteName = "";
+var statsCount = 0;
 
 var getLabel = (labels, idFor) => {
     for (let i = 0; i < labels.length; i++) {
@@ -14,6 +15,7 @@ var getLabel = (labels, idFor) => {
 }
 
 var fillMetricsTable = (table, json) => {
+    statsCount = Object.keys(json).length;
     for (let key in json) {
         let newRow = table.insertRow(-1);
         let athleteCell = newRow.insertCell(0);
@@ -30,6 +32,46 @@ var fillMetricsTable = (table, json) => {
         keyCell.appendChild(keyText);
         boldValue.appendChild(valueText);
         valueCell.appendChild(boldValue);
+    }
+
+    for(let i = 1; i < table.rows.length; i++) {
+        table.rows[i].onmouseover = () => {
+            if(i <= statsCount) {
+                for(let z = 0; z < uploadIteration; z++) {
+                    let tds = table.rows[i + statsCount * z].querySelectorAll("td");
+                    for(let j = 0, td; td = tds[j]; j++) {
+                        td.style.backgroundColor = "#B2FFB2";
+                    }  
+                }
+            }
+            if(i >= statsCount) {
+                for(let z = 0; z < uploadIteration; z++) {
+                    let tds = table.rows[i - statsCount * z].querySelectorAll("td");
+                    for(let j = 0, td; td = tds[j]; j++) {
+                        td.style.backgroundColor = "#B2FFB2";
+                    }  
+                }
+            }
+        }
+        table.rows[i].onmouseout = () => {
+            if (i <= statsCount) {
+                for(let z = 0; z < uploadIteration; z++) {
+                    let tds = table.rows[i + statsCount * z].querySelectorAll("td");
+                    for(let j = 0, td; td = tds[j]; j++) {
+                        td.style.backgroundColor = "white";
+                    }  
+                } 
+            }
+            if(i >= statsCount) {    
+                for(let z = 0; z < uploadIteration; z++) {
+                    let tds = table.rows[i - statsCount * z].querySelectorAll("td");
+                    for(let j = 0, td; td = tds[j]; j++) {
+                        td.style.backgroundColor = "white";
+                    }  
+                } 
+            }
+        }
+        
     }
 }
 
@@ -228,7 +270,7 @@ window.onload = () => {
     document.querySelector("#uploadFiles").onclick = () => {
         document.body.style.cursor='wait';
         
-        const cmjTable = document.querySelector("#cmjTable");
+        const metricsTable = document.querySelector("#metricsTable");
         const forceCSV = forceFile.files[0];
         const velCSV = velocityFile.files[0];
         let formData = new FormData();
@@ -245,7 +287,7 @@ window.onload = () => {
             const data = JSON.parse(event.target.responseText);
             const stats = data["stats"];
             cmjData = data["data"];
-            fillMetricsTable(cmjTable, stats);
+            fillMetricsTable(metricsTable, stats);
             if(myScatter !== null) {
                 myScatter.destroy();
             }
@@ -314,9 +356,9 @@ window.onload = () => {
     } 
     
     document.querySelector("#resetZoomBtn").onclick = () => {
-        console.log("click");
         myScatter.resetZoom();
     }
+
 
     // navbar.onmouseover = () => {
     //     document.querySelector(".header").style.left = "16rem"

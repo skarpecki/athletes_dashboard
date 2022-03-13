@@ -92,30 +92,30 @@
     padding: 0.3rem;
 }
 
-.cmjTable, .cmjTable table, .cmjTable th, .cmjTable td {
+.metricsTable, .metricsTable table, .metricsTable th, .metricsTable td {
     table-layout: fixed;
     background-color: white;
     border: #A9A9A9 1px solid;
     border-collapse: collapse;
 }
 
-.cmjTable th {
+.metricsTable th {
     text-align: left;
     height: 2rem;
     font-weight: normal;
 }
 
-.cmjTable td {
+.metricsTable td {
     font-size: 1rem;
     height: 2rem;
 }
 
-.cmjTable tr:hover td {
+/* .metricsTable tr:hover td {
     background-color: #B2FFB2;
-}
+} */
 
-.cmjTable th:hover {
-    background-color: #B2FFB2;
+.metricsTable tr:hover th {
+    background-color: #32cd32;
 }
 
 #resetZoomBtn {

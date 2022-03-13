@@ -1,7 +1,10 @@
 var cmjData;
 var jumpIterator;
 var jumpsMaxIdx;
-var jumpsMaxForce = 0;
+var yMax = 0;
+var xMin = 0;
+var xMax = 0;
+
 
 
 var getLabel = (labels, idFor) => {
@@ -66,20 +69,30 @@ var generateChartForceData = (jsonCMJ) => {
     return data
 }
 
+var getYMaxValue = (value) => {
+    let thousands = value / 1000;
+    if(thousands < 1) {
+        return 0;
+    }
+    return Math.ceil(thousands) * 1000;
+}   
+
 var getCMJPlotData = (json, xCol, yCol) => {
     let data = [];
     let xArr = json[xCol]
     let yArr = json[yCol]
-    let tempJumpsMaxForce = yArr[0];
+    let tempYMax = yArr[0];
+    xMin = xArr[0];
+    xMax = xArr[xArr.length - 1];
     for (let i = 0; i < xArr.length; i++) {
         data.push({
             x: xArr[i],
             y: yArr[i]
         })
-        tempJumpsMaxForce = Math.max(yArr[i], tempJumpsMaxForce);
+        tempYMax = Math.max(yArr[i], tempYMax);
     }
-    if (tempJumpsMaxForce > jumpsMaxForce) {
-        jumpsMaxForce = Math.round((tempJumpsMaxForce + 1000) / 1000) * 1000;
+    if (tempYMax > yMax) {
+        yMax = getYMaxValue(tempYMax);
     }
     return data;
 }
@@ -93,11 +106,13 @@ var generateChartConfig = (data) => {
             scales: {
                 x: {
                     type: 'linear',
-                    position: 'bottom'
+                    position: 'bottom',
+                    min: xMin,
+                    max: xMax,
                 },
                 y: {
-                    max: jumpsMaxForce,
-                    min: 0
+                    max: yMax,
+                    min: 0,
                 }
                
             },
@@ -202,7 +217,7 @@ window.onload = () => {
             cmjData = data;
             if(myScatter !== null) {
                 myScatter.destroy();
-                jumpsMaxForce = 0;
+                yMax = 0;
             }
             myScatter = new Chart(ctx, 
                 generateChartConfig(generateChartForceData(cmjData[jumpIterator]["data"]))

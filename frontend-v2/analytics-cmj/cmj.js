@@ -1,5 +1,7 @@
 var cmjData;
 var currentDataType = "Force";
+var xMin = 0;
+var xMax = 0;
 
 var getLabel = (labels, idFor) => {
     for (let i = 0; i < labels.length; i++) {
@@ -28,6 +30,22 @@ var showPlotElements = () => {
     document.querySelector("#resetZoomBtn").style.display = "block";
     document.querySelector("#myChart").style.background = "white";
 }
+
+var getCMJPlotData = (json, xCol, yCol) => {
+    let data = [];
+    let xArr = json[xCol]
+    let yArr = json[yCol]
+    xMin = xArr[0];
+    xMax = xArr[xArr.length - 1];
+    for (let i = 0; i < xArr.length; i++) {
+        data.push({
+            x: xArr[i],
+            y: yArr[i]
+        })
+    }
+    return data;
+}
+
 
 var generateChartForceData = (jsonCMJ) => {
     const combinedForceData = getCMJPlotData(jsonCMJ, "Time (s)", "Combined (N)");
@@ -64,24 +82,9 @@ var generateChartForceData = (jsonCMJ) => {
 }
 
 
-
-var getCMJPlotData = (json, xCol, yCol) => {
-    let data = [];
-    let xArr = json[xCol]
-    let yArr = json[yCol]
-
-    for (let i = 0; i < xArr.length; i++) {
-        data.push({
-            x: xArr[i],
-            y: yArr[i]
-        })
-    }
-    return data;
-}
-
 var generateChartVelocityData = (jsonCMJ) => {
     const combinedForceData = getCMJPlotData(jsonCMJ, "Time (s)", "Velocity (m/s)");
-
+    
     const data = {
         datasets: [{
             label: 'Velocity (m/s)',
@@ -121,7 +124,9 @@ var generateChartConfig = (data) => {
             scales: {
                 x: {
                     type: 'linear',
-                }
+                    min: xMin,
+                    max: xMax,
+                },
             },
             plugins: {
                 title: {
@@ -209,7 +214,6 @@ window.onload = () => {
         } else {
             const file = event.target.files[0];
             span.innerHTML = file.name;
-
         }
     }
 
@@ -261,7 +265,9 @@ window.onload = () => {
                 colorTypeButtons(chartTypeBtns, i);
                 data = generateChartVelocityData(cmjData);
                 config = generateChartConfig(data);
-                myScatter.destroy();
+                if(myScatter !== null) {
+                    myScatter.destroy();
+                }
                 myScatter = new Chart(ctx, config);
                 plotDiv.scrollIntoView();
             }
@@ -273,7 +279,9 @@ window.onload = () => {
                 colorTypeButtons(chartTypeBtns, i);
                 data = generateChartForceData(cmjData);
                 config = generateChartConfig(data);
-                myScatter.destroy();
+                if(myScatter !== null) {
+                    myScatter.destroy();
+                }
                 myScatter = new Chart(ctx, config);
                 plotDiv.scrollIntoView();
             }
@@ -285,7 +293,9 @@ window.onload = () => {
                 colorTypeButtons(chartTypeBtns, i);
                 data = generateChartAccelerationData(cmjData);
                 config = generateChartConfig(data);
-                myScatter.destroy();
+                if(myScatter !== null) {
+                    myScatter.destroy();
+                }
                 myScatter = new Chart(ctx, config);
                 plotDiv.scrollIntoView();
             }

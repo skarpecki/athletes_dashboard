@@ -1,0 +1,11 @@
+APP:
+  REST_HOST: localhost
+  ENVIRONMENT: TEST
+  PORT: 5000
+  
+MYSQL_DATABASE:
+  user:
+  password:
+  host:
+  port:
+  db_name:

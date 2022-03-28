@@ -1,4 +1,6 @@
 .git
+.vscode
+.ipynb_checkpoints
 /svgs/
 /ui_ideas/
 /screenshots/
@@ -7,6 +9,7 @@ package-lock.json
 package.json
 test.json
 /jupyter-notebooks/
+~$roject.docx
 
 
 rest_api/__pycache__
@@ -15,7 +18,11 @@ rest_api/resource_converter/__pycache__
 rest_api/resource_exercises/__pycache__
 rest_api/resource_trainings/__pycache__
 rest_api/resource_users/__pycache__
+rest_api/resource_analytics/__pycache__
 
 rest_api/venv
 to_do.txt
 sample
+app.conf.yaml
+data.csv
+debug.py

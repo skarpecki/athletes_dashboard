@@ -136,8 +136,10 @@ var generateChartConfig = (data) => {
                         },
                         drag: {
                             enabled: false,
-                            backgroundColor: "darkgrey",
                         },
+                        pinch: {
+			   enabled: true,
+			},
                         mode: 'xy',
                     },
                     pan: {
@@ -236,7 +238,7 @@ window.onload = () => {
             alert(event.target.responseText);
             document.body.style.cursor='default';
         });
-        XHR.open("POST", "http://127.0.0.1:5000/analytics/cj/");
+        XHR.open("POST", "http://ec2-3-122-127-148.eu-central-1.compute.amazonaws.com:5000/analytics/cj/");
         XHR.send(formData);
     }
 

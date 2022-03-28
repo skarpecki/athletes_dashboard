@@ -238,7 +238,7 @@ window.onload = () => {
             alert(event.target.responseText);
             document.body.style.cursor='default';
         });
-        XHR.open("POST", "http://ec2-3-122-127-148.eu-central-1.compute.amazonaws.com:5000/analytics/cj/");
+        XHR.open("POST", `http://${rest_host}:${rest_port}/analytics/cj/`);
         XHR.send(formData);
     }
 

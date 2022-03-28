@@ -2,6 +2,7 @@ APP:
   REST_HOST: localhost
   ENVIRONMENT: TEST
   PORT: 5000
+  ACCESS-CONTROL-ALLOW-ORIGIN: 'http://localhost'
   
 MYSQL_DATABASE:
   user:

@@ -12,15 +12,15 @@ test.json
 ~$roject.docx
 
 
-rest_api/__pycache__
-rest_api/common/__pycache__
-rest_api/resource_converter/__pycache__
-rest_api/resource_exercises/__pycache__
-rest_api/resource_trainings/__pycache__
-rest_api/resource_users/__pycache__
-rest_api/resource_analytics/__pycache__
+app/__pycache__
+app/common/__pycache__
+app/resource_converter/__pycache__
+app/resource_exercises/__pycache__
+app/resource_trainings/__pycache__
+app/resource_users/__pycache__
+app/resource_analytics/__pycache__
 
-rest_api/venv
+app/venv
 to_do.txt
 sample
 app.conf.yaml

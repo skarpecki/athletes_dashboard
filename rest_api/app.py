@@ -4,6 +4,8 @@ from flask.helpers import make_response
 from pymongo import MongoClient
 import yaml
 from os import path
+from flask_sqlalchemy import SQLAlchemy
+
 
 if path.exists(path.dirname(path.abspath(__file__)) + '/../config/app.conf.yaml'):
     config_file_path = path.dirname(path.abspath(__file__)) + '/../config/app.conf.yaml'
@@ -17,6 +19,13 @@ with open(config_file_path) as config_file:
 
 app = Flask(__name__)
 app.config["FLASK_ENV"] = "development"
+app.config['SQLALCHEMY_DATABASE_URI'] = ("mysql+pymysql"
+                                         "://config['APP']['USER']"
+                                         ":config['APP']['PASSWORD']"
+                                         "@config['APP']['HOST']"
+                                         "/config['APP']['DB_NAME']")
+app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = "FALSE"
+db = SQLAlchemy(app)
 
 from resource_trainings.controller import trainings_bp
 app.register_blueprint(trainings_bp, url_prefix="/trainings")

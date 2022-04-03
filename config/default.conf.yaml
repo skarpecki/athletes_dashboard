@@ -5,8 +5,8 @@ APP:
   ACCESS-CONTROL-ALLOW-ORIGIN: 'http://localhost'
   
 MYSQL_DATABASE:
-  user:
-  password:
-  host:
-  port:
-  db_name:
+  USER: root
+  PASSWORD: root
+  HOST: localhost
+  PORT: 3600
+  DB_NAME: athletes_db

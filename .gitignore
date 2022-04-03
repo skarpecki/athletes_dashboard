@@ -12,14 +12,6 @@ test.json
 ~$roject.docx
 
 
-app/__pycache__
-app/common/__pycache__
-app/resource_converter/__pycache__
-app/resource_exercises/__pycache__
-app/resource_trainings/__pycache__
-app/resource_users/__pycache__
-app/resource_analytics/__pycache__
-
 app/venv
 to_do.txt
 sample
@@ -28,4 +20,5 @@ data.csv
 debug.py
 frontend-v2/config.js
 
+*/__pycache__
 */*/__pycache__

@@ -1,6 +1,6 @@
 from urllib.request import Request
 from flask import Blueprint, request, make_response
-from .model import AnalyticsService
+from app.resource_analytics.model import AnalyticsService
 
 analytics_bp = Blueprint('analytics', __name__)
 

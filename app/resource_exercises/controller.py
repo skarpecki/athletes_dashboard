@@ -1,8 +1,8 @@
 import re
 from flask import Blueprint, request, make_response
 from werkzeug.datastructures import ContentSecurityPolicy
-from .model import ExerciseService
-from common.module import addCORSHeader
+from app.resource_exercises.model import ExerciseService
+from app.common.module import addCORSHeader
 
 exercises_bp = Blueprint('exercises', __name__)
 

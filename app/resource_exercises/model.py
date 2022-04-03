@@ -9,7 +9,7 @@ from marshmallow.exceptions import ValidationError
 from pymongo import MongoClient, collection
 import pymongo
 from pymongo.errors import DuplicateKeyError, PyMongoError
-from common.module import Result, JSONEncoder, validateMongoFilter
+from app.common.module import Result, JSONEncoder, validateMongoFilter
 
 
 class ExerciseType(Enum):

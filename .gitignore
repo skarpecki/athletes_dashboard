@@ -27,3 +27,5 @@ app.conf.yaml
 data.csv
 debug.py
 frontend-v2/config.js
+
+*/*/__pycache__
